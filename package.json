@@ -48,6 +48,7 @@
     "@storybook/addon-essentials": "~6.4.12",
     "@storybook/addon-toolbars": "^6.4.19",
     "@storybook/builder-webpack5": "~6.4.12",
+    "@storybook/core-server": "~6.4.12",
     "@storybook/manager-webpack5": "~6.4.12",
     "@storybook/react": "~6.4.12",
     "@svgr/webpack": "^5.4.0",

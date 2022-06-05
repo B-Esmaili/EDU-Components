@@ -6,6 +6,8 @@
     "edu-client": "packages/edu-client",
     "edu-client-e2e": "packages/edu-client-e2e",
     "ui-core": "packages/ui-core",
-    "ui-core-e2e": "packages/ui-core-e2e"
+    "ui-core-e2e": "packages/ui-core-e2e",
+    "ui-edu": "packages/ui-edu",
+    "ui-edu-e2e": "packages/ui-edu-e2e"
   }
 }

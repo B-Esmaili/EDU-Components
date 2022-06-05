@@ -1,0 +1,28 @@
+{
+  "root": "packages/ui-edu-e2e",
+  "sourceRoot": "packages/ui-edu-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "packages/ui-edu-e2e/cypress.json",
+        "devServerTarget": "ui-edu:storybook"
+      },
+      "configurations": {
+        "ci": {
+          "devServerTarget": "ui-edu:storybook:ci"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/ui-edu-e2e/**/*.{js,ts}"]
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["ui-edu"]
+}
