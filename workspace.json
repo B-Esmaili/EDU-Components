@@ -3,6 +3,8 @@
   "projects": {
     "admin": "packages/admin",
     "admin-e2e": "packages/admin-e2e",
+    "edu-client": "packages/edu-client",
+    "edu-client-e2e": "packages/edu-client-e2e",
     "ui-core": "packages/ui-core",
     "ui-core-e2e": "packages/ui-core-e2e"
   }

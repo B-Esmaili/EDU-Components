@@ -1,0 +1,62 @@
+{
+  "root": "packages/edu-client",
+  "sourceRoot": "packages/edu-client",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "root": "packages/edu-client",
+        "outputPath": "dist/packages/edu-client"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "edu-client:build",
+        "dev": true,
+        "port": 3000,
+        "hostname": "localhost"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "edu-client:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "edu-client:build:production",
+          "dev": false
+        }
+      }
+    },
+    "export": {
+      "executor": "@nrwl/next:export",
+      "options": {
+        "buildTarget": "edu-client:build:production"
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/edu-client"],
+      "options": {
+        "jestConfig": "packages/edu-client/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/edu-client/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  },
+  "tags": []
+}

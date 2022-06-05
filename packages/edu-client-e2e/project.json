@@ -1,0 +1,28 @@
+{
+  "root": "packages/edu-client-e2e",
+  "sourceRoot": "packages/edu-client-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "packages/edu-client-e2e/cypress.json",
+        "devServerTarget": "edu-client:serve:development"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "edu-client:serve:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/edu-client-e2e/**/*.{js,ts}"]
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["edu-client"]
+}
