@@ -1,1 +1,1 @@
-export * from './lib/ui-edu';
+export * from './lib/use-wave';
