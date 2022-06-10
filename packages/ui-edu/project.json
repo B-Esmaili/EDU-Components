@@ -1,5 +1,5 @@
 {
-  "root": "packages/ui-edu",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/ui-edu/src",
   "projectType": "library",
   "tags": [],
@@ -15,7 +15,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/packages/ui-edu"],
       "options": {
-        "jestConfig": "packages/ui-edu/jest.config.js",
+        "jestConfig": "packages/ui-edu/jest.config.ts",
         "passWithNoTests": true
       }
     },

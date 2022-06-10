@@ -5,9 +5,11 @@
     "admin-e2e": "packages/admin-e2e",
     "edu-client": "packages/edu-client",
     "edu-client-e2e": "packages/edu-client-e2e",
+    "edu-server": "packages/edu-server",
     "ui-core": "packages/ui-core",
     "ui-core-e2e": "packages/ui-core-e2e",
     "ui-edu": "packages/ui-edu",
     "ui-edu-e2e": "packages/ui-edu-e2e"
-  }
+  },
+  "$schema": "./node_modules/nx/schemas/workspace-schema.json"
 }

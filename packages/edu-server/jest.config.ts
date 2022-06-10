@@ -1,4 +1,5 @@
 /* eslint-disable */
+/* eslint-disable */
 export default {
   displayName: 'edu-server',
   preset: '../../jest.preset.js',

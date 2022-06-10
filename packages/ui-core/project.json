@@ -1,11 +1,11 @@
 {
-  "root": "packages/ui-core",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/ui-core/src",
   "projectType": "library",
   "tags": [],
   "targets": {
-    "type-check" :{
-      "executor" : "./tools/executors/tsCheck:tsCheck"
+    "type-check": {
+      "executor": "./tools/executors/tsCheck:tsCheck"
     },
     "build": {
       "executor": "@nrwl/web:rollup",
@@ -38,7 +38,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/packages/ui-core"],
       "options": {
-        "jestConfig": "packages/ui-core/jest.config.js",
+        "jestConfig": "packages/ui-core/jest.config.ts",
         "passWithNoTests": true
       }
     },
