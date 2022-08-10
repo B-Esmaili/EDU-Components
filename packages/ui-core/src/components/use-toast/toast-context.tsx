@@ -29,7 +29,11 @@ const defaultValue: ToastContextParams = {
   }
 };
 
-export const ToastContextProvider: React.FC = ({ children }) => {
+export interface ToastContextProviderProps{
+  children?:React.ReactNode
+}
+
+export const ToastContextProvider: React.FC<ToastContextProviderProps> = ({ children }) => {
   const [toasts, updateToasts] = React.useState<Toast[]>([]);
 
   return (
