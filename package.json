@@ -11,6 +11,7 @@
   },
   "private": true,
   "dependencies": {
+    "@directus/sdk": "^10.1.4",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/mapped-types": "*",
