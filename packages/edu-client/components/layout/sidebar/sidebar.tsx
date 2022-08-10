@@ -69,7 +69,7 @@ const SideBar: React.FC = () => {
           items={menuItems}
           itemHoverBackground="light-4"
           fill="vertical"
-          width={isSmallScreen ? 'fill' : '300px'}
+          width={isSmallScreen ? 'fill' : '350px'}
           miniWidth="80px"
           {...sideNavProps}
           header={({ mini }) => (
