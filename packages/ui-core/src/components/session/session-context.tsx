@@ -2,6 +2,8 @@ import { createContext, useState } from 'react';
 
 export interface SessionInfo {
   userId?: string;
+  email?:string;
+  avatar?:string
 }
 
 export interface SessionContextValue {

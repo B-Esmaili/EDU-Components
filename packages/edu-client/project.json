@@ -25,7 +25,9 @@
         "buildTarget": "edu-client:build",
         "dev": true,
         "port": 3000,
-        "hostname": "localhost"
+        "hostname": "localhost",
+        "customServerPath" : "server.js",
+        "proxyConfig" : "packages/edu-client/setupProxy.js"
       },
       "configurations": {
         "development": {

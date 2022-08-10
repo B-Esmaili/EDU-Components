@@ -23,7 +23,7 @@ const AuthLayer = (props) => {
         }
       }
 
-      const resp = await axiosInstance.get<SessionInfo>(
+      const resp = await axiosInstance.get<{data:SessionInfo}>(
         process.env.NEXT_PUBLIC_SESSION_API_URL
       );
 
@@ -31,7 +31,7 @@ const AuthLayer = (props) => {
         throw new Error('Not Authorized!');
       }
 
-      return resp.data;
+      return resp.data.data;
     } catch (ex) {
       if (isBrowserEnv()){
         router.push(process.env.NEXT_PUBLIC_LOGIN_URL);

@@ -5,7 +5,7 @@ const nextTranslate = require('next-translate')
 /**
  * @type {import('@nrwl/next/plugins/with-nx').WithNxOptions}
  **/
-const nextConfig = {
+const nextConfig = {   
   nx: {
     // Set this to true if you would like to to use SVGR
     // See: https://github.com/gregberge/svgr
