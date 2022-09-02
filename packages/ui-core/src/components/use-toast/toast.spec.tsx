@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { render } from '../../test-utils';
 import { ToastType, useToast } from './use-toast';
 import '@testing-library/jest-dom';
+import { fireEvent, waitFor } from '@testing-library/react';
 
 describe('Toast', () => {
   it('actions callback is called', async () => {
@@ -31,9 +32,12 @@ describe('Toast', () => {
     const { findByText } = render(<Component />);
 
     const closeToastButton = await findByText('Close Toast', {});
-    closeToastButton.click();
+    fireEvent.click(closeToastButton);
 
-    expect(onClose).toHaveBeenCalled();
+    await waitFor(()=>{
+      expect(onClose).toHaveBeenCalled();
+    });
+
   });
 
   it('type renders correct color', () => {
