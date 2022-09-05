@@ -19,12 +19,16 @@ jest.mock('./element-factory', () => {
   };
 });
 
-describe('use-element', () => {
-  it('add element', async function () {
-    const Page = ({ children }: { children: unknown }) => {
-      return <PageContext>{children}</PageContext>;
-    };
+const Page = ({ children }: { children: unknown }) => {
+  return <PageContext>{children}</PageContext>;
+};
 
+describe('use-element', () => {
+
+   beforeEach(()=>{
+    jest.clearAllMocks();
+   });
+  it('add element', async function () {
     const Element = () => {
       const el = useElement('root');
 
@@ -65,10 +69,6 @@ describe('use-element', () => {
   });
 
   it('insert element', async function () {
-    const Page = ({ children }: { children: unknown }) => {
-      return <PageContext>{children}</PageContext>;
-    };
-
     const createElement = jest.spyOn(elemFactory, 'createElement');
     createElement.mockImplementation((element) => {
       return (
@@ -109,7 +109,6 @@ describe('use-element', () => {
           {el.childElements.map((e, i) => (
             <div key={i}>{e}</div>
           ))}
-          <Box role="list">{el.childElements.length}</Box>
         </div>
       );
     };
@@ -122,8 +121,78 @@ describe('use-element', () => {
 
     await waitFor(async () => {
       const items = getAllByTestId('listitem');
+      expect(items.length).toBeGreaterThan(0);
       if (items) {
         expect(items[1].innerHTML.trim()).toBe('inserted');
+      }
+    });
+  });
+
+  it('move element', async function () {
+    const createElement = jest.spyOn(elemFactory, 'createElement');
+    createElement.mockImplementation((element) => (
+        <div data-testid="listitem">
+            {//@ts-ignore
+              element?.model?.content
+            }
+        </div>
+    ));
+
+    const Element = () => {
+      const el = useElement('root');
+      const {moveElement} = el;
+
+      const addElem = async (content: string) =>
+        await el.addElement({
+          codeName: 'simple',
+          elementClass: ElementClass.Block,
+          type: ElementType.FabricElement,
+          model: { content },
+        });
+
+      useEffect(() => {
+        (async () => {
+          await act(() => {
+            addElem('child1');
+            addElem('child2');
+            addElem('child3');
+          });
+        })();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      },[]);
+
+      useEffect(()=>{
+        if(el.childElements.length === 3){
+         (async()=>{
+            await act(async()=>{
+               moveElement(0,1);
+            })
+         })();
+        }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      },[el.childElements.length])
+
+      return (
+        <div>
+          {el.childElements.map((e, i) => (
+            <div key={i}>{e}</div>
+          ))}
+        </div>
+      );
+    };
+
+    const { getAllByTestId } = render(
+      <Page>
+        <Element />
+      </Page>
+    );
+
+    await waitFor(async () => {
+      const items = getAllByTestId('listitem');
+      expect(items.length).toEqual(3);
+
+      if (items) {
+        expect(items[1].innerHTML.trim()).toBe('child1');
       }
     });
   });
