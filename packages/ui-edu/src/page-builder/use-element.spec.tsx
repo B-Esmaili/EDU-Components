@@ -241,7 +241,7 @@ describe('use-element', () => {
       );
     };
 
-    const { getAllByTestId } = render(
+    const { getAllByTestId, queryByText } = render(
       <Page>
         <Element />
       </Page>
@@ -250,6 +250,15 @@ describe('use-element', () => {
     await waitFor(() => {
       const items = getAllByTestId('listitem');
       expect(items.length).toEqual(2);
+    });
+
+    await waitFor(async () => {
+      const child1 = queryByText('child1');
+      const child2 = queryByText('child2');
+      const child3 = queryByText('child3');
+      expect(child1).toBeTruthy();
+      expect(child2).toBeTruthy();
+      expect(child3).toBeFalsy();
     });
   });
 });
