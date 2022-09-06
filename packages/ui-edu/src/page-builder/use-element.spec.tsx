@@ -23,12 +23,16 @@ const Page = ({ children }: { children: unknown }) => {
   return <PageContext>{children}</PageContext>;
 };
 
-const mockCreateElement = (
-  contentDisplay: (element: PageElement) => React.ReactNode
+const mockCreateElement = <TModel extends object = object>(
+  contentDisplay: (element: PageElement<TModel>) => React.ReactNode
 ) => {
   const createElement = jest.spyOn(elemFactory, 'createElement');
   createElement.mockImplementation((element) => {
-    return <div data-testid="listitem">{contentDisplay(element)}</div>;
+    return (
+      <div data-testid="listitem">
+        {contentDisplay(element as PageElement<TModel>)}
+      </div>
+    );
   });
 };
 
@@ -194,7 +198,7 @@ describe('use-element', () => {
       }
     });
   });
-  
+
   it('swap element', async function () {
     //@ts-ignore
     mockCreateElement((element) => element?.model?.content);
@@ -324,5 +328,55 @@ describe('use-element', () => {
       expect(child2).toBeTruthy();
       expect(child3).toBeFalsy();
     });
-  });  
+  });
+
+  interface Model {
+    title: string;
+  }
+
+  it('update model', async function () {
+    const Element = () => {
+      const el = useElement<Model>('root');
+      mockCreateElement<Model>((element) => element.model.title);     
+
+      useEffect(()=>{
+        (async () => {
+          await act(async () => {
+            el.updateModel({
+              title: 'Title',
+            });
+          });
+        })();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      },[]);
+
+      useEffect(() => {
+        (async () => {
+          await act(async () => {
+            el.updateModel({
+              title: 'Updated Title',
+            });
+          });
+        })();       
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      },[el.model.title]);
+
+      return (
+        <div role="log">
+          {el.model.title}
+        </div>
+      );
+    };
+
+    const { getByRole } = render(
+      <Page>
+        <Element />
+      </Page>
+    );
+
+    await waitFor(() => {
+      expect(getByRole('log').innerHTML.trim()).toBe('Updated Title');
+    });
+  });
 });

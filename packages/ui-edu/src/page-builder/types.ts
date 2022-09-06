@@ -37,7 +37,7 @@ export interface UseElementReturn<TModel extends object = object> {
   swapElements: (index1: number, index2: number) => void;
   moveElement: (index1: number, index2: number) => void;
   updateElement: (index: number, element: PageElement) => void;
-  updateModel: (model: object) => void;
+  updateModel: (model: Partial<TModel>) => void;
   getElementById: (id: string) => PageElement | undefined;
   getElement: (index: number) => PageElement | undefined;
   childElements: ReactElement[];

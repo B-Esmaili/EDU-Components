@@ -81,7 +81,7 @@ const useElement = function <TModel extends object = object>(
     swap(indexA, indexB);
   };
 
-  const updateCurrentElement = (model: object) => {
+  const updateCurrentElement = (model: Partial<TModel>) => {
     const _model = getValues(modelProp);
     const updatedModel = { ..._model, ...model };
     setValue(modelProp, updatedModel);
