@@ -163,7 +163,7 @@ describe('use-element', () => {
         if (el.childElements.length === 3) {
           (async () => {
             await act(async () => {
-              moveElement(0, 1);
+              moveElement(0, 2);
             });
           })();
         }
@@ -190,7 +190,71 @@ describe('use-element', () => {
       expect(items.length).toEqual(3);
 
       if (items) {
-        expect(items[1].innerHTML.trim()).toBe('child1');
+        expect(items[2].innerHTML.trim()).toBe('child1');
+      }
+    });
+  });
+  
+  it('swap element', async function () {
+    //@ts-ignore
+    mockCreateElement((element) => element?.model?.content);
+
+    const Element = () => {
+      const el = useElement('root');
+      const { swapElements } = el;
+
+      const addElem = async (content: string) =>
+        await el.addElement({
+          codeName: 'simple',
+          elementClass: ElementClass.Block,
+          type: ElementType.FabricElement,
+          model: { content },
+        });
+
+      useEffect(() => {
+        (async () => {
+          await act(() => {
+            addElem('child1');
+            addElem('child2');
+            addElem('child3');
+          });
+        })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, []);
+
+      useEffect(() => {
+        if (el.childElements.length === 3) {
+          (async () => {
+            await act(async () => {
+              swapElements(0, 2);
+            });
+          })();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [el.childElements.length]);
+
+      return (
+        <div>
+          {el.childElements.map((e, i) => (
+            <div key={i}>{e}</div>
+          ))}
+        </div>
+      );
+    };
+
+    const { getAllByTestId } = render(
+      <Page>
+        <Element />
+      </Page>
+    );
+
+    await waitFor(async () => {
+      const items = getAllByTestId('listitem');
+      expect(items.length).toEqual(3);
+
+      if (items) {
+        expect(items[0].innerHTML.trim()).toBe('child3');
+        expect(items[2].innerHTML.trim()).toBe('child1');
       }
     });
   });
@@ -260,5 +324,5 @@ describe('use-element', () => {
       expect(child2).toBeTruthy();
       expect(child3).toBeFalsy();
     });
-  });
+  });  
 });
