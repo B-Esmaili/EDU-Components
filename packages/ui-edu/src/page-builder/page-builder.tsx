@@ -1,4 +1,5 @@
-import {Box} from "grommet"
+import PageBuilderRoot from "./page-builder-root";
+import { PageContext } from "./page-context";
 
 export interface PageComponent{
    id: string;
@@ -11,11 +12,10 @@ export interface PageBuilderProps {
 
 const PageBuilder : React.FC<PageBuilderProps> = (props)=>{
 
-        
 
-    return  <Box>
-       
-    </Box>
+    return  <PageContext>
+       <PageBuilderRoot/>
+    </PageContext>
 }
 
 export {PageBuilder}

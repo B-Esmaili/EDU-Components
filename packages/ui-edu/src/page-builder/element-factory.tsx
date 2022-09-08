@@ -6,7 +6,7 @@ import { ElementType, PageElement } from "./types";
 
 export const createElement = (
   element: PageElement,
-  id: string,
+  path: string,
   index: number,
   shouldFocus = false
 ): ReactElement | null => {
@@ -14,7 +14,7 @@ export const createElement = (
     return null;
   }
   if (element.type === ElementType.FabricElement) {
-    return createFabricElement(element, id, index,shouldFocus);
+    return createFabricElement(element, path, index,shouldFocus);
   }
 
   return <Box/>;
@@ -50,7 +50,7 @@ const getElementKey = (model: PageElement) => `./elements/${model.codeName}`;
 
 const createFabricElement = (
   model: PageElement,
-  id: string,
+  path: string,
   index: number,
   shouldFocus = false
 ): ReactElement | null => {
@@ -58,6 +58,7 @@ const createFabricElement = (
   if (!component) {
     return null;
   }
-  const element = React.createElement<any>(component, { key: model.id, index, id,shouldFocus });
+  
+  const element = React.createElement<any>(component, { key: model.uid, index, path,shouldFocus });
   return element;
 };

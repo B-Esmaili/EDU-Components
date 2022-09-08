@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { FC, ReactElement } from 'react';
 
 export enum ElementType {
   FabricElement = 1,
@@ -12,7 +12,8 @@ export enum ElementClass {
 
 export interface PageElement<TModel extends object = object>
   extends Record<string, unknown> {
-  id?: string;
+  //id: string;
+  uid: string;
   model: TModel;
   elementClass: ElementClass;
   type: ElementType;
@@ -39,7 +40,27 @@ export interface UseElementReturn<TModel extends object = object> {
   updateElement: (index: number, element: PageElement) => void;
   updateModel: (model: Partial<TModel>) => void;
   getElementById: (id: string) => PageElement | undefined;
+  getElementIndexById: (id: string) => number;  
   getElement: (index: number) => PageElement | undefined;
   childElements: ReactElement[];
+  childElementsIds: string[];
   model: TModel;
+  uid : string
+}
+
+export interface PageElementProps {
+  path: string;
+  index: number;
+  shouldFocus?: boolean;
+}
+
+export type PageComponentConstructor<TModel extends object = object> = (
+  model: TModel
+) => TModel;
+
+export interface PageComponent<
+  TModel extends object = object,
+  TProps extends PageElementProps = PageElementProps
+> extends FC<TProps> {
+  constructor?: PageComponentConstructor<TModel>;
 }

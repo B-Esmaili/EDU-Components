@@ -12,7 +12,10 @@
   "private": true,
   "dependencies": {
     "@directus/sdk": "^10.1.4",
-    "@hookform/devtools": "^4.2.2",
+    "@dnd-kit/core": "^6.0.5",
+    "@dnd-kit/sortable": "^7.0.1",
+    "@dnd-kit/utilities": "^3.2.0",
+    "@hookform/devtools": "4.0.1",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/mapped-types": "*",

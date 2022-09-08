@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useMemo } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import uuid from '../utils/uid';
 import { createElement, prepairElement } from './element-factory';
 import {
   AddElementOptions,
@@ -27,6 +28,7 @@ const useElement = function <TModel extends object = object>(
     const { model, elementClass, type, codeName, children } = options;
 
     const store: PageElement = {
+      uid: uuid(),
       model: model ?? {},
       elementClass: elementClass ?? ElementClass.Primitive,
       type,
@@ -41,6 +43,7 @@ const useElement = function <TModel extends object = object>(
   const { fields, append, remove, insert, swap, move, update } = useFieldArray({
     name: itemArrayFieldName,
     control: control,
+    keyName: 'id',
   });
 
   if (!elementMap.size) {
@@ -90,7 +93,11 @@ const useElement = function <TModel extends object = object>(
   const getFields = () => getValues(itemArrayFieldName) as PageElement[];
 
   const getElementById = (id: string) => {
-    return getFields().find((e) => e.id === id);
+    return getFields().find((e) => e.uid === id);
+  };
+
+  const getElementIndexById = (id: string) => {
+    return getFields().findIndex((e) => e.uid === id);
   };
 
   const getElement = (index: number): PageElement => {
@@ -113,30 +120,39 @@ const useElement = function <TModel extends object = object>(
     move(indexA, indexB);
   };
 
+  const childElementsIds = useMemo(
+    () =>
+      (fields as unknown as PageElement[]).map((f) => f.uid),
+    [fields]
+  );
+
   const childElements = useMemo(
     () =>
-      (fields as PageElement[]).map((f, idx: number) =>
-        createElement(
-          f,
-          `${elementId}.${childs_prefix}.${idx}`,
-          idx,
-          focusRef.current === idx
-        )
-      ) as React.ReactElement[],
+      (fields as unknown as PageElement[]).map((f, idx: number) => createElement(
+        f,
+        `${elementId}.${childs_prefix}.${idx}`,
+        idx,
+        focusRef.current === idx
+      )) as React.ReactElement[],
     [elementId, fields]
   );
+
+  const uid = useMemo(() => getValues(elementId).uid, [elementId, getValues]);
 
   const element: UseElementReturn<TModel> = {
     addElement,
     moveElement,
     swapElements,
     updateModel: updateCurrentElement,
-    removeElement,
+    getElementIndexById,
     getElementById,
+    removeElement,
     getElement,
     updateElement,
+    childElementsIds,
     childElements,
     model,
+    uid
   };
 
   elementMap.set(elementId, element);
