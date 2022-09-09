@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useMemo } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import uuid from '../utils/uid';
@@ -57,7 +57,7 @@ const useElement = function <TModel extends object = object>(
     index?: number,
     shouldFocus?: boolean
   ) => {
-    const isExistingElement = Boolean((options as PageElement).id);
+    const isExistingElement = Boolean((options as PageElement).uid);
     if (shouldFocus) {
       focusRef.current = index;
     }
@@ -121,23 +121,33 @@ const useElement = function <TModel extends object = object>(
   };
 
   const childElementsIds = useMemo(
-    () =>
-      (fields as unknown as PageElement[]).map((f) => f.uid),
+    () => (fields as unknown as PageElement[]).map((f) => f.uid),
     [fields]
   );
 
-  const childElements = useMemo(
-    () =>
-      (fields as unknown as PageElement[]).map((f, idx: number) => createElement(
+  const getElementView = useCallback(
+    (f: PageElement, idx: number) =>
+      createElement(
         f,
         `${elementId}.${childs_prefix}.${idx}`,
         idx,
         focusRef.current === idx
-      )) as React.ReactElement[],
-    [elementId, fields]
+      ),
+    [elementId]
   );
 
-  const uid = useMemo(() => getValues(elementId).uid, [elementId, getValues]);
+  const childElements = useMemo(
+    () =>
+      (fields as unknown as PageElement[]).map((f, idx: number) => {
+        return getElementView(f, idx);
+      }) as React.ReactElement[],
+    [fields, getElementView]
+  );
+
+  const uid = useMemo(
+    () => getValues(elementId)?.uid ?? '',
+    [elementId, getValues]
+  );
 
   const element: UseElementReturn<TModel> = {
     addElement,
@@ -146,13 +156,14 @@ const useElement = function <TModel extends object = object>(
     updateModel: updateCurrentElement,
     getElementIndexById,
     getElementById,
+    getElementView,
     removeElement,
     getElement,
     updateElement,
     childElementsIds,
     childElements,
     model,
-    uid
+    uid,
   };
 
   elementMap.set(elementId, element);

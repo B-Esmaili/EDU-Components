@@ -1,37 +1,38 @@
 import { useSortable } from '@dnd-kit/sortable';
-import { Box } from 'grommet';
-import styled from 'styled-components';
+import { Box, Button } from 'grommet';
 import { PageComponent, PageElementProps } from '../types';
 import useElement from '../use-element';
 import { CSS } from '@dnd-kit/utilities';
+import Container from './fabric/container';
+import { Drag } from 'grommet-icons';
+import { DraggableBox, DragHandle } from '../components';
 
 export interface RowModel {}
 export interface RowProps extends PageElementProps {}
 
-const DraggableBox = styled(Box)<{ transform?: string; transition?: string }>`
-  ${({ transform }) => transform && `transform:${transform};`}
-  ${({ transition }) => transition && `transition:${transition};`}
-`;
-
 const Row: PageComponent<RowModel, RowProps> = (props) => {
   const { path } = props;
-  
-  const {uid} = useElement(path);
-  
-  const { attributes, listeners, setNodeRef, transform, transition } =
-   useSortable({ id: uid ?? path });
 
-  const transformValue = CSS.Transform.toString(transform);
+  const { uid } = useElement(path);
+
+  const { attributes, listeners, setNodeRef } = useSortable({ id: uid });
 
   return (
     <DraggableBox
-      {...attributes}
-      {...listeners}
+      border={{ size: 'small', color: 'brand', style: 'solid' }}
+      pad="small"
       ref={setNodeRef}
-      transform={transformValue}
-      transition={transition}
     >
+      <DragHandle width="auto">
+        <Button icon={<Drag />} {...attributes} {...listeners} />
+      </DragHandle>
+      <Box>
         {uid}
+        {path && (
+          <Container path={path} uid={uid}>
+          </Container>
+        )}
+      </Box>
     </DraggableBox>
   );
 };

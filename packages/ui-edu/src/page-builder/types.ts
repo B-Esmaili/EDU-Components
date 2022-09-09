@@ -1,4 +1,4 @@
-import { FC, ReactElement } from 'react';
+import React, { FC, ReactElement } from 'react';
 
 export enum ElementType {
   FabricElement = 1,
@@ -42,6 +42,7 @@ export interface UseElementReturn<TModel extends object = object> {
   getElementById: (id: string) => PageElement | undefined;
   getElementIndexById: (id: string) => number;  
   getElement: (index: number) => PageElement | undefined;
+  getElementView : (element:PageElement , index:number)=> React.ReactElement | null;
   childElements: ReactElement[];
   childElementsIds: string[];
   model: TModel;

@@ -1,10 +1,16 @@
-import { SortableContext } from '@dnd-kit/sortable';
-import { Box } from 'grommet';
+import { useDroppable } from '@dnd-kit/core';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { Box, Button } from 'grommet';
+import { DropPlaceholder } from '../../components';
 import { ElementClass, ElementType } from '../../types';
 import useElement from '../../use-element';
 
 export interface ContainerProps {
-  id: string;
+  path: string;
+  uid: string;
   children: React.ReactNode;
 }
 
@@ -20,20 +26,29 @@ export const createRowElement = (content = '') => {
 };
 
 const Container: React.FC<ContainerProps> = (props) => {
-  const { id, children } = props;
-  const { childElements, childElementsIds, addElement } = useElement(id);
+  const { path, children } = props;
+  const { childElements, childElementsIds, addElement } = useElement(path);
 
   const handleAdd = () => {
     addElement(createRowElement());
   };
 
+  const { setNodeRef } = useDroppable({ id: path });
+
   return (
-    <Box direction='column'>
-      <SortableContext id={id} items={childElementsIds}>
-        {childElements}
-        {children}
+    <Box direction="column">
+      <SortableContext
+        id={path}
+        items={childElementsIds}
+        strategy={verticalListSortingStrategy}      
+      >
+        <Box ref={setNodeRef} pad="large" border={{color:"green" , size:"small" , style:"dashed"}}>
+          {childElements}
+          {children}
+        </Box>
+        <Button label="add" onClick={handleAdd}/>
+        {/* <DropPlaceholder onClick={handleAdd} id={uid}/> */}
       </SortableContext>
-      <button onClick={handleAdd}>+</button>
     </Box>
   );
 };

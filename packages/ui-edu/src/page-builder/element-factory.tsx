@@ -1,8 +1,22 @@
-import { Box } from "grommet";
-import React, { ReactElement } from "react";
- 
-import dynamic from "next/dynamic";
-import { ElementType, PageElement } from "./types";
+import { Box } from 'grommet';
+import React, { ReactElement } from 'react';
+
+import dynamic from 'next/dynamic';
+import { ElementType, PageElement } from './types';
+import { PageComponentMeta } from './page-builder';
+import Row from './elements/row';
+
+const builtInComponents: PageComponentMeta[] = [
+  {
+    id: 'row',
+    Component: Row,
+  },
+];
+const elementCache = new Map<string, React.ComponentType>();
+
+builtInComponents.forEach((component) =>
+  elementCache.set(component.id, component.Component as unknown as React.ComponentType)
+);
 
 export const createElement = (
   element: PageElement,
@@ -14,10 +28,10 @@ export const createElement = (
     return null;
   }
   if (element.type === ElementType.FabricElement) {
-    return createFabricElement(element, path, index,shouldFocus);
+    return createFabricElement(element, path, index, shouldFocus);
   }
 
-  return <Box/>;
+  return <Box />;
 };
 
 export const prepairElement = (model: PageElement): Promise<any> => {
@@ -26,10 +40,10 @@ export const prepairElement = (model: PageElement): Promise<any> => {
   }
   return new Promise((res, rej) => {
     try {
-      const elementPath = getElementKey(model);
+      const elementPath = getElementKey(model.codeName);
       const loadingComponent = dynamic(() =>
         //https://stackoverflow.com/questions/62942727/dynamic-importing-of-an-unknown-component-nextjs
-        import("" + elementPath).then((c) => c.default)
+        import('' + elementPath).then((c) => c.default)
       );
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -44,9 +58,7 @@ export const prepairElement = (model: PageElement): Promise<any> => {
   });
 };
 
-const elementCache = new Map<string, React.ComponentType>();
-
-const getElementKey = (model: PageElement) => `./elements/${model.codeName}`;
+const getElementKey = (codeName: string) => `./elements/${codeName}`;
 
 const createFabricElement = (
   model: PageElement,
@@ -54,11 +66,16 @@ const createFabricElement = (
   index: number,
   shouldFocus = false
 ): ReactElement | null => {
-  const component = elementCache.get(getElementKey(model));
+  const component = elementCache.get(getElementKey(model.codeName));
   if (!component) {
     return null;
   }
-  
-  const element = React.createElement<any>(component, { key: model.uid, index, path,shouldFocus });
+
+  const element = React.createElement<any>(component, {
+    key: model.uid,
+    index,
+    path,
+    shouldFocus,
+  });
   return element;
 };
