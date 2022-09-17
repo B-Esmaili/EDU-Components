@@ -4,6 +4,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { Box, Button } from 'grommet';
+import { Add } from 'grommet-icons';
 import { DropPlaceholder } from '../../components';
 import { ElementClass, ElementType } from '../../types';
 import useElement from '../../use-element';
@@ -40,13 +41,21 @@ const Container: React.FC<ContainerProps> = (props) => {
       <SortableContext
         id={path}
         items={childElementsIds}
-        strategy={verticalListSortingStrategy}      
+        strategy={verticalListSortingStrategy}
       >
-        <Box ref={setNodeRef} pad="large" border={{color:"green" , size:"small" , style:"dashed"}}>
+        <Box
+          ref={setNodeRef}
+          pad="small"
+          border={{ color: 'green', size: 'small', style: 'dashed' }}
+        >
           {childElements}
           {children}
         </Box>
-        <Button label="add" onClick={handleAdd}/>
+        <Box align='center'>
+          <Box width="2em">
+            <Button icon={<Add />} onClick={handleAdd} />
+          </Box>
+        </Box>
         {/* <DropPlaceholder onClick={handleAdd} id={uid}/> */}
       </SortableContext>
     </Box>

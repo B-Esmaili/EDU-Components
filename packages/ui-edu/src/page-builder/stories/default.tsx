@@ -31,6 +31,6 @@ export const Default = ()=>{
     }
 
     return <Box>
-        <PageBuilder components={[]} data={{}}/>
+        <PageBuilder components={[]} data={data}/>
     </Box>
 }

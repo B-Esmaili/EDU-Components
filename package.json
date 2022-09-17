@@ -15,7 +15,7 @@
     "@dnd-kit/core": "^6.0.5",
     "@dnd-kit/sortable": "^7.0.1",
     "@dnd-kit/utilities": "^3.2.0",
-    "@hookform/devtools": "4.0.1",
+    "@hookform/devtools": "4.2.2",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/mapped-types": "*",
@@ -46,7 +46,7 @@
     "remeda": "^0.0.32",
     "rxjs": "^7.0.0",
     "styled-components": "5.3.3",
-    "styled-hook-form": "^1.0.0-rc.48",
+    "styled-hook-form": "^1.0.0",
     "tslib": "^2.0.0",
     "use-debounce": "^7.0.1",
     "wavesurfer.js": "^6.2.0"

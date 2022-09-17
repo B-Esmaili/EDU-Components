@@ -6,6 +6,8 @@ import { ElementType, PageElement } from './types';
 import { PageComponentMeta } from './page-builder';
 import Row from './elements/row';
 
+const getElementKey = (codeName: string) => `./elements/${codeName}`;
+
 const builtInComponents: PageComponentMeta[] = [
   {
     id: 'row',
@@ -15,7 +17,7 @@ const builtInComponents: PageComponentMeta[] = [
 const elementCache = new Map<string, React.ComponentType>();
 
 builtInComponents.forEach((component) =>
-  elementCache.set(component.id, component.Component as unknown as React.ComponentType)
+  elementCache.set(getElementKey(component.id), component.Component as unknown as React.ComponentType)
 );
 
 export const createElement = (
@@ -58,7 +60,6 @@ export const prepairElement = (model: PageElement): Promise<any> => {
   });
 };
 
-const getElementKey = (codeName: string) => `./elements/${codeName}`;
 
 const createFabricElement = (
   model: PageElement,

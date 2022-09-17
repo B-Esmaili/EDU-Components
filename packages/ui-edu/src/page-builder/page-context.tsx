@@ -13,6 +13,7 @@ import { useExistingElement } from './use-element';
 import { useRef, useState } from 'react';
 import { DragOverlayView } from './components/drag-overlay-view';
 import { createGlobalStyle } from 'styled-components';
+import {UseFormReturn} from "react-hook-form";
 
 const GlobalStyle = createGlobalStyle`
 ` as React.ComponentClass;
@@ -23,7 +24,7 @@ interface DragDropContextProps {
 
 export interface PageContextProps {
   children: React.ReactNode;
-  data: any;
+  formMethods: UseFormReturn<any>;
 }
 
 interface ElementId {
@@ -154,10 +155,8 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
 };
 
 const PageContext: React.FC<PageContextProps> = (props) => {
-  const { children, data } = props;
-  const methods = useForm({
-    defaultValues: data,
-  });
+  const { children, formMethods : methods } = props;
+ 
 
   // useEffect(()=>{
   //   if (data.root){

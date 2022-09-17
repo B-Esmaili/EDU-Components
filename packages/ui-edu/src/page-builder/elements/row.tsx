@@ -2,7 +2,6 @@ import { useSortable } from '@dnd-kit/sortable';
 import { Box, Button } from 'grommet';
 import { PageComponent, PageElementProps } from '../types';
 import useElement from '../use-element';
-import { CSS } from '@dnd-kit/utilities';
 import Container from './fabric/container';
 import { Drag } from 'grommet-icons';
 import { DraggableBox, DragHandle } from '../components';
@@ -27,7 +26,6 @@ const Row: PageComponent<RowModel, RowProps> = (props) => {
         <Button icon={<Drag />} {...attributes} {...listeners} />
       </DragHandle>
       <Box>
-        {uid}
         {path && (
           <Container path={path} uid={uid}>
           </Container>
@@ -36,5 +34,12 @@ const Row: PageComponent<RowModel, RowProps> = (props) => {
     </DraggableBox>
   );
 };
+
+export const Editor = ()=>{
+  
+  return <Box>
+    
+  </Box>
+}
 
 export default Row;

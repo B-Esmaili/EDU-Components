@@ -138,9 +138,11 @@ const useElement = function <TModel extends object = object>(
 
   const childElements = useMemo(
     () =>
-      (fields as unknown as PageElement[]).map((f, idx: number) => {
-        return getElementView(f, idx);
-      }) as React.ReactElement[],
+      {
+        return (fields as unknown as PageElement[]).map((f, idx: number) => {
+          return getElementView(f, idx);
+        }) as React.ReactElement[];
+      },
     [fields, getElementView]
   );
 
