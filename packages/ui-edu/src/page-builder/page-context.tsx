@@ -155,15 +155,7 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
 };
 
 const PageContext: React.FC<PageContextProps> = (props) => {
-  const { children, formMethods : methods } = props;
- 
-
-  // useEffect(()=>{
-  //   if (data.root){
-  //     methods.register("root");
-  //     methods.setValue("root" , data)
-  //   }
-  // },[data, methods]);
+  const { children, formMethods : methods } = props; 
 
   return (
     <FormProvider {...methods}>
