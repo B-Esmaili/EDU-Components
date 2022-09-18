@@ -17,7 +17,10 @@ const builtInComponents: PageComponentMeta[] = [
 const elementCache = new Map<string, React.ComponentType>();
 
 builtInComponents.forEach((component) =>
-  elementCache.set(getElementKey(component.id), component.Component as unknown as React.ComponentType)
+  elementCache.set(
+    getElementKey(component.id),
+    component.Component as unknown as React.ComponentType
+  )
 );
 
 export const createElement = (
@@ -36,7 +39,24 @@ export const createElement = (
   return <Box />;
 };
 
-export const prepairElement = (model: PageElement): Promise<any> => {
+export const getElementEditorComponent = async (
+  element: PageElement,
+) : Promise<React.ComponentType> => {
+  return new Promise((res, rej) => {
+    prepairElement(element , (c)=>c.Editor)
+      .then((c) =>
+        res(
+          c
+        )
+      )
+      .catch((e) => rej(e));
+  });
+};
+
+export const prepairElement = (
+  model: PageElement,
+  componentSelector?: (module: any) => any
+): Promise<any> => {
   if (!model) {
     return Promise.reject();
   }
@@ -45,7 +65,9 @@ export const prepairElement = (model: PageElement): Promise<any> => {
       const elementPath = getElementKey(model.codeName);
       const loadingComponent = dynamic(() =>
         //https://stackoverflow.com/questions/62942727/dynamic-importing-of-an-unknown-component-nextjs
-        import('' + elementPath).then((c) => c.default)
+        import('' + elementPath).then((c) =>
+          componentSelector ? componentSelector(c) : c.default
+        )
       );
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -59,7 +81,6 @@ export const prepairElement = (model: PageElement): Promise<any> => {
     }
   });
 };
-
 
 const createFabricElement = (
   model: PageElement,

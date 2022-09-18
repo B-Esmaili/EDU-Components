@@ -13,7 +13,8 @@ import { useExistingElement } from './use-element';
 import { useRef, useState } from 'react';
 import { DragOverlayView } from './components/drag-overlay-view';
 import { createGlobalStyle } from 'styled-components';
-import {UseFormReturn} from "react-hook-form";
+import { UseFormReturn } from 'react-hook-form';
+import { PageBuilderContextProvider, PageBuilderContextValue, PageElementId } from './page-builder-context';
 
 const GlobalStyle = createGlobalStyle`
 ` as React.ComponentClass;
@@ -139,7 +140,7 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
       onDragOver={handleDragOver}
       onDragStart={handleDragStart}
       collisionDetection={pointerWithin}
-    >      
+    >
       <GlobalStyle />
       <DragOverlay>
         {activeItem ? (
@@ -155,15 +156,24 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
 };
 
 const PageContext: React.FC<PageContextProps> = (props) => {
-  const { children, formMethods : methods } = props; 
+  const { children, formMethods: methods } = props;
+
+  const contextValue : PageBuilderContextValue = {    
+    setActiveElementId : (id: PageElementId | null)=>{
+      methods.setValue("activeElementId" , id);
+    },
+    activeElementId : methods.watch("activeElementId")
+  }
 
   return (
-    <FormProvider {...methods}>
-      {methods.control && (
-        <DevTool placement="top-right" control={methods.control} />
-      )}
-      <DragDropContext>{children}</DragDropContext>
-    </FormProvider>
+    <PageBuilderContextProvider value={contextValue}>
+      <FormProvider {...methods}>
+        {methods.control && (
+          <DevTool placement="bottom-left" control={methods.control} />
+        )}
+        <DragDropContext>{children}</DragDropContext>
+      </FormProvider>
+    </PageBuilderContextProvider>
   );
 };
 

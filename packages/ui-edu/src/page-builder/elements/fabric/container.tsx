@@ -5,14 +5,13 @@ import {
 } from '@dnd-kit/sortable';
 import { Box, Button } from 'grommet';
 import { Add } from 'grommet-icons';
-import { DropPlaceholder } from '../../components';
 import { ElementClass, ElementType } from '../../types';
 import useElement from '../../use-element';
 
 export interface ContainerProps {
   path: string;
   uid: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export const createRowElement = (content = '') => {

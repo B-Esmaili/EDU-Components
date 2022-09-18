@@ -40,13 +40,16 @@ export interface UseElementReturn<TModel extends object = object> {
   updateElement: (index: number, element: PageElement) => void;
   updateModel: (model: Partial<TModel>) => void;
   getElementById: (id: string) => PageElement | undefined;
-  getElementIndexById: (id: string) => number;  
+  getElementIndexById: (id: string) => number;
   getElement: (index: number) => PageElement | undefined;
-  getElementView : (element:PageElement , index:number)=> React.ReactElement | null;
+  getElementView: (
+    element: PageElement,
+    index: number
+  ) => React.ReactElement | null;
   childElements: ReactElement[];
   childElementsIds: string[];
   model: TModel;
-  uid : string
+  uid: string;
 }
 
 export interface PageElementProps {
@@ -59,9 +62,19 @@ export type PageComponentConstructor<TModel extends object = object> = (
   model: TModel
 ) => TModel;
 
-export interface PageComponent<
+export type PageComponent<
   TModel extends object = object,
   TProps extends PageElementProps = PageElementProps
-> extends FC<TProps> {
+> = FC<TProps> & {
   constructor?: PageComponentConstructor<TModel>;
 }
+
+export type PageComponentEditor<
+  TProps extends {
+    path: string;
+    uid: string;
+  } = {
+    path: string;
+    uid: string;
+  }
+> = FC<TProps>;
