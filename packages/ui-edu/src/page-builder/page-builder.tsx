@@ -9,6 +9,8 @@ import { useEffect } from 'react';
 export interface PageComponentMeta {
   id: string;
   Component: PageComponent;
+  icon:React.ReactNode;
+  label :string;
 }
 
 export interface PageBuilderProps {

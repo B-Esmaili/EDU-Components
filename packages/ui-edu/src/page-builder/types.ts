@@ -8,6 +8,7 @@ export enum ElementType {
 export enum ElementClass {
   'Block' = 1,
   'Primitive' = 2,
+  'Layout' = 3
 }
 
 export interface PageElement<TModel extends object = object>
@@ -28,7 +29,10 @@ export interface AddElementOptions {
   children?: PageElement[];
 }
 
-export interface UseElementReturn<TModel extends object = object> {
+export interface UseElementReturn<
+  TModel extends object = object,
+  TConfig extends object = object
+> {
   addElement: (
     options: AddElementOptions | PageElement,
     index?: number,
@@ -49,6 +53,7 @@ export interface UseElementReturn<TModel extends object = object> {
   childElements: ReactElement[];
   childElementsIds: string[];
   model: TModel;
+  config: TConfig;
   uid: string;
 }
 
@@ -58,16 +63,20 @@ export interface PageElementProps {
   shouldFocus?: boolean;
 }
 
-export type PageComponentConstructor<TModel extends object = object> = (
-  model: TModel
-) => TModel;
+export type PageComponentConstructor<TModel extends object = object> = () => {
+  elementClass: ElementClass;
+  type: ElementType;
+  model?:TModel
+};
 
 export type PageComponent<
   TModel extends object = object,
   TProps extends PageElementProps = PageElementProps
 > = FC<TProps> & {
-  constructor?: PageComponentConstructor<TModel>;
-}
+  ctor: PageComponentConstructor<TModel>;
+  displayName: string;
+  icon: React.ReactNode;
+};
 
 export type PageComponentEditor<
   TProps extends {

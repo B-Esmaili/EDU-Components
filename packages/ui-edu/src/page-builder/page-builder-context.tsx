@@ -1,4 +1,5 @@
 import { createContext } from "react";
+import { PageComponentMeta } from "./page-builder";
 
 export interface PageElementId{
     uid:string,
@@ -8,11 +9,13 @@ export interface PageElementId{
 export interface PageBuilderContextValue {
     setActiveElementId : (elementId : PageElementId | null)=>void;
     activeElementId : PageElementId | null;
+    componentsMetadata : PageComponentMeta[];
 }
 
 const ContextValue : PageBuilderContextValue = {
     setActiveElementId : ()=>void 0,
-    activeElementId:null
+    activeElementId:null,
+    componentsMetadata : []
 }
 
 export const PageBuilderContext = createContext<PageBuilderContextValue>(ContextValue);

@@ -16,10 +16,11 @@ const childs_prefix = 'children';
 
 const elementMap = new Map<string, UseElementReturn>();
 
-const useElement = function <TModel extends object = object>(
+const useElement = function <TModel extends object = object,TConfig extends object = object>(
   elementId: string
-): UseElementReturn<TModel> {
+): UseElementReturn<TModel,TConfig> {
   const modelProp = `${elementId}.model`;
+  const configProp = `${elementId}.editor`;
   const focusRef = useRef<number>();
 
   const { register, getValues, setValue, control } = useFormContext();
@@ -116,6 +117,12 @@ const useElement = function <TModel extends object = object>(
     defaultValue: {},
   });
 
+  const config = useWatch({
+    control,
+    name: configProp,
+    defaultValue: {},
+  });
+
   const moveElement = (indexA: number, indexB: number) => {
     move(indexA, indexB);
   };
@@ -151,7 +158,7 @@ const useElement = function <TModel extends object = object>(
     [elementId, getValues]
   );
 
-  const element: UseElementReturn<TModel> = {
+  const element: UseElementReturn<TModel,TConfig> = {
     addElement,
     moveElement,
     swapElements,
@@ -164,6 +171,7 @@ const useElement = function <TModel extends object = object>(
     updateElement,
     childElementsIds,
     childElements,
+    config,
     model,
     uid,
   };

@@ -10,11 +10,12 @@ import {
   pointerWithin,
 } from '@dnd-kit/core';
 import { useExistingElement } from './use-element';
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { DragOverlayView } from './components/drag-overlay-view';
 import { createGlobalStyle } from 'styled-components';
 import { UseFormReturn } from 'react-hook-form';
 import { PageBuilderContextProvider, PageBuilderContextValue, PageElementId } from './page-builder-context';
+import { builtInComponentsMeta } from './element-factory';
 
 const GlobalStyle = createGlobalStyle`
 ` as React.ComponentClass;
@@ -158,11 +159,16 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
 const PageContext: React.FC<PageContextProps> = (props) => {
   const { children, formMethods: methods } = props;
 
+  const componentsMetadata = useMemo(()=>{
+     return [...builtInComponentsMeta];    
+  },[]);
+
   const contextValue : PageBuilderContextValue = {    
     setActiveElementId : (id: PageElementId | null)=>{
       methods.setValue("activeElementId" , id);
     },
-    activeElementId : methods.watch("activeElementId")
+    activeElementId : methods.watch("activeElementId"),
+    componentsMetadata
   }
 
   return (

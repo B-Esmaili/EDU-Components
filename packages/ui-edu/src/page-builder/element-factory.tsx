@@ -12,8 +12,11 @@ const builtInComponents: PageComponentMeta[] = [
   {
     id: 'row',
     Component: Row,
+    icon : Row.icon,
+    label : Row.displayName
   },
 ];
+
 const elementCache = new Map<string, React.ComponentType>();
 
 builtInComponents.forEach((component) =>
@@ -101,3 +104,8 @@ const createFabricElement = (
   });
   return element;
 };
+
+
+export {
+  builtInComponents as builtInComponentsMeta
+}
