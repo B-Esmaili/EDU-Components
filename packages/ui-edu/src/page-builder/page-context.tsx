@@ -16,6 +16,7 @@ import { createGlobalStyle } from 'styled-components';
 import { UseFormReturn } from 'react-hook-form';
 import { PageBuilderContextProvider, PageBuilderContextValue, PageElementId } from './page-builder-context';
 import { builtInComponentsMeta } from './element-factory';
+import { ElementClassValues } from './types';
 
 const GlobalStyle = createGlobalStyle`
 ` as React.ComponentClass;
@@ -48,11 +49,25 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
     });
   }
 
+  const canDrop = (sourceClasses  : ElementClassValues [] | null , targetAccepts : ElementClassValues[] | null) : boolean =>{
+
+    if (!targetAccepts || targetAccepts.includes("*")){
+      return true;
+    }
+
+    if (!sourceClasses){
+      return true;
+    }
+
+    return sourceClasses.some(c=>targetAccepts.includes(c));
+  }
+
   const handleDragEnd = (e: DragEndEvent) => {
     //@ts-ignore
     const oldParentId = e.active?.data?.current?.sortable?.containerId;
     //@ts-ignore
     const newParentId = e.over?.data?.current?.sortable?.containerId;
+    const sourceClasses = e.active?.data?.current?.["classes"] as ElementClassValues[];
 
     const id = e.over?.id as string;
     const { id: oldId } = e.active;
@@ -68,6 +83,12 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
 
     //if target is a container
     if (id.startsWith('root')) {
+      const targetAccepts = e.over?.data?.current?.["accept"] as ElementClassValues[];
+      
+      if (!canDrop(sourceClasses , targetAccepts)){
+        return;
+      }
+ 
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const oldParentContext = useExistingElement(oldParentId);
       const srcElement = oldParentContext?.getElementById(oldId as string);
@@ -89,6 +110,10 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
           parentEl.moveElement(srcIndex, targetInex);
         }
       } else {
+        const targetAccepts = e.over?.data?.current?.["parentAccept"] as ElementClassValues[];        
+        if (!canDrop(sourceClasses , targetAccepts)){
+          return;
+        }
         // eslint-disable-next-line react-hooks/rules-of-hooks
         const newParentEl = useExistingElement(newParentId);
         // eslint-disable-next-line react-hooks/rules-of-hooks

@@ -2,10 +2,11 @@ import { useSortable } from '@dnd-kit/sortable';
 import { Accordion, AccordionPanel, Box, Button, CheckBox } from 'grommet';
 import { ElementClass, ElementType, PageComponent, PageComponentEditor, PageElementProps } from '../types';
 import useElement from '../use-element';
-import Container from './fabric/container';
+import Container, { ContainerContext } from './fabric/container';
 import { BladesVertical, Drag } from 'grommet-icons';
 import { DraggableBox, DragHandle } from '../components';
 import { FieldView, FormFieldType } from 'styled-hook-form';
+import { useContext } from 'react';
 
 export interface RowModel {}
 export interface RowConfig { 
@@ -13,12 +14,17 @@ export interface RowConfig {
 }
 export interface RowProps extends PageElementProps {}
 
+const ROW_CLASSES = [ElementClass.Layout];
+
 const Row: PageComponent<RowModel, RowProps> = (props) => {
   const { path } = props;
-
   const { uid, config } = useElement<RowModel,RowConfig>(path);
+  const {accept : parentAccept} = useContext(ContainerContext);
 
-  const { attributes, listeners, setNodeRef } = useSortable({ id: uid });
+  const { attributes, listeners, setNodeRef } = useSortable({ id: uid, data : {
+      classes : ROW_CLASSES,
+      parentAccept 
+  }});
 
   return (
     <DraggableBox
@@ -29,8 +35,7 @@ const Row: PageComponent<RowModel, RowProps> = (props) => {
       <DragHandle width="auto">
         <Button icon={<Drag />} {...attributes} {...listeners} />
       </DragHandle>
-      {config && <CheckBox checked={config.responsive}/> }
-      <Box>{path && <Container path={path} uid={uid} />}</Box>
+      <Box>{path && <Container accept={["*"]} path={path} uid={uid} />}</Box>
     </DraggableBox>
   );
 };
