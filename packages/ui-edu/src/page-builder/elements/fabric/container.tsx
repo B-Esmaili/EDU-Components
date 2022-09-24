@@ -5,19 +5,27 @@ import {
 } from '@dnd-kit/sortable';
 import { Box, Button, Grid, Layer } from 'grommet';
 import { Add } from 'grommet-icons';
-import { useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { PageComponentMeta } from '../../page-builder';
 import { PageBuilderContext } from '../../page-builder-context';
+import { ElementClassValues } from '../../types';
 import useElement from '../../use-element';
 
 export interface ContainerProps {
   path: string;
   uid: string;
   children?: React.ReactNode;
+  accept?: ElementClassValues[];
 }
 
+export interface ContainerContextValue {
+  accept?: ElementClassValues[];
+}
+
+export const ContainerContext = createContext<ContainerContextValue>({});
+
 const Container: React.FC<ContainerProps> = (props) => {
-  const { path, children } = props;
+  const { path, children, accept } = props;
   const { childElements, childElementsIds, addElement } = useElement(path);
   const [showComponentSelection, setshowComponentSelection] = useState(false);
 
@@ -27,18 +35,23 @@ const Container: React.FC<ContainerProps> = (props) => {
 
   const { componentsMetadata } = useContext(PageBuilderContext);
 
-  const { setNodeRef } = useDroppable({ id: path });
+  const { setNodeRef } = useDroppable({
+    id: path,
+    data: {
+      accept,
+    },
+  });
 
   const handleCloseComponentSelection = () => {
     setshowComponentSelection(false);
   };
 
-  const handleComponentSelect = (meta : PageComponentMeta)=>{
+  const handleComponentSelect = (meta: PageComponentMeta) => {
     addElement({
       codeName: meta.id,
-      ...meta.Component.ctor()
+      ...meta.Component.ctor(),
     });
-  }
+  };
 
   return (
     <Box direction="column">
@@ -47,14 +60,18 @@ const Container: React.FC<ContainerProps> = (props) => {
         items={childElementsIds}
         strategy={verticalListSortingStrategy}
       >
-        <Box
-          ref={setNodeRef}
-          pad="small"
-          border={{ color: 'green', size: 'small', style: 'dashed' }}
-        >
-          {childElements}
-          {children}
-        </Box>
+        <ContainerContext.Provider value={{
+          accept
+        }}>
+          <Box
+            ref={setNodeRef}
+            pad="small"
+            border={{ color: 'green', size: 'small', style: 'dashed' }}
+          >
+            {childElements}
+            {children}
+          </Box>
+        </ContainerContext.Provider>
         <Box align="center">
           <Box width="2em">
             <Button icon={<Add />} onClick={handleAdd} />
@@ -84,7 +101,7 @@ const ComponentSelectionPanel: React.FC<ComponentSelectionPabelProps> = (
 ) => {
   const { onClose, show, componentsMetadata, onSelect } = props;
 
-  const handleSelect = (meta:PageComponentMeta) => () => {
+  const handleSelect = (meta: PageComponentMeta) => () => {
     onSelect?.(meta);
     onClose?.();
   };

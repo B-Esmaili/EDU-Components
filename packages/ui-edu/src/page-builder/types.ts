@@ -11,6 +11,8 @@ export enum ElementClass {
   'Layout' = 3
 }
 
+export type ElementClassValues = ElementClass | "*";
+
 export interface PageElement<TModel extends object = object>
   extends Record<string, unknown> {
   //id: string;
