@@ -20,18 +20,19 @@ const useElement = function <TModel extends object = object,TConfig extends obje
   elementId: string
 ): UseElementReturn<TModel,TConfig> {
   const modelProp = `${elementId}.model`;
-  const configProp = `${elementId}.editor`;
+  const configProp = `${elementId}.config`;
   const focusRef = useRef<number>();
 
   const { register, getValues, setValue, control } = useFormContext();
 
   const createElementStore = (options: AddElementOptions): PageElement => {
-    const { model, elementClass, type, codeName, children } = options;
+    const { model , config, classes, type, codeName, children } = options;
 
     const store: PageElement = {
       uid: uuid(),
       model: model ?? {},
-      elementClass: elementClass ?? ElementClass.Primitive,
+      config: config?? {},
+      class: classes ?? ElementClass.Primitive,
       type,
       codeName,
       children,

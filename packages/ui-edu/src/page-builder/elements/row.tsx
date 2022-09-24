@@ -1,5 +1,5 @@
 import { useSortable } from '@dnd-kit/sortable';
-import { Accordion, AccordionPanel, Box, Button, CheckBox } from 'grommet';
+import { Accordion, AccordionPanel, Box, Button } from 'grommet';
 import { ElementClass, ElementType, PageComponent, PageComponentEditor, PageElementProps } from '../types';
 import useElement from '../use-element';
 import Container, { ContainerContext } from './fabric/container';
@@ -47,7 +47,8 @@ Row.ctor = ()=>{
   return {
     elementClass : ElementClass.Layout,
     type : ElementType.FabricElement,
-    model : {}
+    model : {},
+    classes : [ElementClass.Layout]
   }
 }
 

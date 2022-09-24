@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { ElementType, PageElement } from './types';
 import { PageComponentMeta } from './page-builder';
 import Row from './elements/row';
+import Heading from './elements/heading';
 
 const getElementKey = (codeName: string) => `./elements/${codeName}`;
 
@@ -13,8 +14,16 @@ const builtInComponents: PageComponentMeta[] = [
     id: 'row',
     Component: Row,
     icon : Row.icon,
-    label : Row.displayName
+    label : Row.displayName,
+    classes : []
   },
+  {
+    id: 'heading',
+    Component: Heading,
+    icon : Heading.icon,
+    label : Heading.displayName,
+    classes : []
+  }
 ];
 
 const elementCache = new Map<string, React.ComponentType>();

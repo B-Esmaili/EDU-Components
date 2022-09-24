@@ -46,11 +46,21 @@ const Container: React.FC<ContainerProps> = (props) => {
     setshowComponentSelection(false);
   };
 
-  const handleComponentSelect = (meta: PageComponentMeta) => {
-    addElement({
+  const handleComponentSelect = (meta: PageComponentMeta) => {    
+    if (
+      accept &&
+      !accept.some((c) => c === '*') &&
+      !meta.classes.some((c) => accept?.includes(c))
+    ) {
+      return;
+    }
+
+    const newel = {
       codeName: meta.id,
       ...meta.Component.ctor(),
-    });
+    };
+debugger
+    addElement(newel);
   };
 
   return (
@@ -60,9 +70,11 @@ const Container: React.FC<ContainerProps> = (props) => {
         items={childElementsIds}
         strategy={verticalListSortingStrategy}
       >
-        <ContainerContext.Provider value={{
-          accept
-        }}>
+        <ContainerContext.Provider
+          value={{
+            accept,
+          }}
+        >
           <Box
             ref={setNodeRef}
             pad="small"

@@ -13,19 +13,21 @@ export enum ElementClass {
 
 export type ElementClassValues = ElementClass | "*";
 
-export interface PageElement<TModel extends object = object>
+export interface PageElement<TModel extends object = object,TConfig extends object = object>
   extends Record<string, unknown> {
   //id: string;
   uid: string;
-  model: TModel;
-  elementClass: ElementClass;
+  model?: TModel;
+  config?: TConfig;
+  classes?: ElementClassValues[];
   type: ElementType;
   codeName: string;
 }
 
 export interface AddElementOptions {
-  elementClass: ElementClass;
+  classes?: ElementClassValues[];
   model?: object;
+  config?: object;
   type: ElementType;
   codeName: string;
   children?: PageElement[];
@@ -65,10 +67,11 @@ export interface PageElementProps {
   shouldFocus?: boolean;
 }
 
-export type PageComponentConstructor<TModel extends object = object> = () => {
-  elementClass: ElementClass;
+export type PageComponentConstructor<TModel extends object = object, TConfig extends object = object> = () => {
+  classes: ElementClassValues[];
   type: ElementType;
-  model?:TModel
+  model?:TModel;
+  config?:TConfig;
 };
 
 export type PageComponent<

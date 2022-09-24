@@ -1,7 +1,7 @@
 import { Box } from 'grommet';
 import PageBuilderRoot from './page-builder-root';
 import { PageContext } from './page-context';
-import { PageComponent } from './types';
+import { ElementClassValues, PageComponent } from './types';
 import { useForm } from 'react-hook-form';
 import { EditorForm } from './editor-form';
 import { useEffect } from 'react';
@@ -11,6 +11,7 @@ export interface PageComponentMeta {
   Component: PageComponent;
   icon:React.ReactNode;
   label :string;
+  classes : ElementClassValues[]
 }
 
 export interface PageBuilderProps {
