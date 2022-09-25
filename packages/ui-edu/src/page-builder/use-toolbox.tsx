@@ -57,10 +57,11 @@ const ToolBox: React.FC<ToolBoxProps> = (props) => {
       {...(rest as object)}
       background="brand"
       round="xsmall"
+      pad="xsmall"
     >
       {items.map((item, i) => (
         <ToolBoxItemView key={i}>
-          <Button size='xxsmall' icon={item.icon} ref={item.itemRef} {...item.props} />
+          <Button size='xxsmall' plain icon={item.icon} ref={item.itemRef} {...item.props} />
         </ToolBoxItemView>
       ))}
     </StyledToolBox>
