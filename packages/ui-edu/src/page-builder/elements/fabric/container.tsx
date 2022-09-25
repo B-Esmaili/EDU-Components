@@ -59,7 +59,7 @@ const Container: React.FC<ContainerProps> = (props) => {
       codeName: meta.id,
       ...meta.Component.ctor(),
     };
-debugger
+
     addElement(newel);
   };
 

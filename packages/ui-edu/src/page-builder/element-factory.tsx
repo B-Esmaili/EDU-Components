@@ -85,7 +85,9 @@ export const prepairElement = (
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
       loadingComponent.render.preload().then((component: any) => {
-        elementCache.set(elementPath, component);
+        if (!componentSelector){
+          elementCache.set(elementPath, component);
+        }
         res(component);
       });
     } catch (err) {
