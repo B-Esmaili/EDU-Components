@@ -120,17 +120,17 @@ const ComponentSelectionPanel: React.FC<ComponentSelectionPabelProps> = (
 
   return show ? (
     <Layer onClickOutside={onClose}>
-      <Grid width="large" columns={['1fr']} pad="small">
+      <Grid width="large" columns={{
+        count:"fit",
+        size:"xsmall"
+      }} pad="small" gap="small">
         {componentsMetadata.length &&
           componentsMetadata.map((meta) => (
             <Box
               align="center"
               pad="medium"
               onClick={handleSelect(meta)}
-              hoverIndicator="background-back"
-              width={{
-                max: 'small',
-              }}
+              hoverIndicator="background-back"              
               border={{
                 size: '2px',
                 color: 'brand',
