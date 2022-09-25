@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
 import {
   DndContext,
@@ -7,7 +7,12 @@ import {
   DragOverEvent,
   DragOverlay,
   DragStartEvent,
+  KeyboardSensor,
+  MouseSensor,
   pointerWithin,
+  TouchSensor,
+  useSensor,
+  useSensors,
 } from '@dnd-kit/core';
 import { useExistingElement } from './use-element';
 import { useMemo, useRef, useState } from 'react';
@@ -20,6 +25,8 @@ import { ElementClassValues } from './types';
 
 const GlobalStyle = createGlobalStyle`
 ` as React.ComponentClass;
+
+const  DRAG_TRESHOLD = 40;
 
 interface DragDropContextProps {
   children: React.ReactNode;
@@ -160,12 +167,31 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
     }
   };
 
+  const mouseSensor = useSensor(MouseSensor,{
+    activationConstraint:{
+      distance: DRAG_TRESHOLD
+    }
+  });
+  const touchSensor = useSensor(TouchSensor , {
+    activationConstraint :{
+      distance : DRAG_TRESHOLD
+    }
+  });
+  const keyboardSensor = useSensor(KeyboardSensor);
+  
+  const sensors = useSensors(
+    mouseSensor,
+    touchSensor,
+    keyboardSensor,
+  );
+
   return (
     <DndContext
       onDragEnd={handleDragEnd}
       onDragOver={handleDragOver}
       onDragStart={handleDragStart}
       collisionDetection={pointerWithin}
+      sensors={sensors}
     >
       <GlobalStyle />
       <DragOverlay>
