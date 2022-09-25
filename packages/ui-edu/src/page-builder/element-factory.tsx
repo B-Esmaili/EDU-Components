@@ -6,6 +6,7 @@ import { ElementType, PageElement } from './types';
 import { PageComponentMeta } from './page-builder';
 import Row from './elements/row';
 import Heading from './elements/heading';
+import Paragraph from './elements/paragraph';
 
 const getElementKey = (codeName: string) => `./elements/${codeName}`;
 
@@ -22,6 +23,13 @@ const builtInComponents: PageComponentMeta[] = [
     Component: Heading,
     icon : Heading.icon,
     label : Heading.displayName,
+    classes : []
+  },
+  {
+    id: 'paragraph',
+    Component: Paragraph,
+    icon : Paragraph.icon,
+    label : Paragraph.displayName,
     classes : []
   }
 ];
