@@ -127,6 +127,7 @@ const ComponentSelectionPanel: React.FC<ComponentSelectionPabelProps> = (
         {componentsMetadata.length &&
           componentsMetadata.map((meta) => (
             <Box
+              key={meta.id}
               align="center"
               pad="medium"
               onClick={handleSelect(meta)}

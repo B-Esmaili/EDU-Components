@@ -11,15 +11,13 @@ import { PropType } from '@atomic-web/ui-core';
 import { FieldView, FormFieldType } from 'styled-hook-form';
 import useElement from '../use-element';
 import { Subscript } from 'grommet-icons';
-import { useSortable } from '@dnd-kit/sortable';
-import { useContext } from 'react';
-import { ContainerContext } from './fabric/container';
+import { useToolBox } from '../use-toolbox';
 
 export interface HeadingConfig {
   level: PropType<HeadingProps, 'level'>;
 }
 
-const HEADING_CLASSES : ElementClassValues[] = [ElementClass.Primitive];
+const HEADING_CLASSES: ElementClassValues[] = [ElementClass.Primitive];
 
 const Heading: PageComponent<Record<string, never>, PageElementProps> = (
   props
@@ -30,26 +28,18 @@ const Heading: PageComponent<Record<string, never>, PageElementProps> = (
     path
   );
 
-  const {accept : parentAccept} = useContext(ContainerContext);
-
-  const { attributes, listeners, setNodeRef } = useSortable({
+  const { toolBoxView, setNodeRef, itemStyle } = useToolBox({
     id: uid,
-    data: {
-      classes: HEADING_CLASSES,
-      parentAccept,
-    },
+    classes: HEADING_CLASSES,
   });
 
   return (
-    <GrommetHeading
-      {...listeners}
-      {...attributes}
-      ref={setNodeRef}
-      level={config.level}
-    >
-      {' '}
-      Heading{' '}
-    </GrommetHeading>
+    <Box style={{ ...itemStyle }}>
+      {toolBoxView}
+      <GrommetHeading ref={setNodeRef} level={config.level}>
+        Heading
+      </GrommetHeading>
+    </Box>
   );
 };
 

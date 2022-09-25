@@ -1,18 +1,25 @@
-import { PropType } from "@atomic-web/ui-core";
-import { useSortable } from "@dnd-kit/sortable";
-import { ParagraphProps , Paragraph as GrommetParagraph, Box } from "grommet";
-import { TextAlignFull } from "grommet-icons";
-import { useContext } from "react";
-import { FieldView, FormFieldType } from "styled-hook-form";
-import { ElementClass, ElementClassValues, ElementType, PageComponent, PageComponentEditor, PageElementProps } from "../types";
-import useElement from "../use-element";
-import { ContainerContext } from "./fabric/container";
+import { PropType } from '@atomic-web/ui-core';
+import { useSortable } from '@dnd-kit/sortable';
+import { ParagraphProps, Paragraph as GrommetParagraph, Box } from 'grommet';
+import { TextAlignFull } from 'grommet-icons';
+import { useContext } from 'react';
+import { FieldView, FormFieldType } from 'styled-hook-form';
+import {
+  ElementClass,
+  ElementClassValues,
+  ElementType,
+  PageComponent,
+  PageComponentEditor,
+  PageElementProps,
+} from '../types';
+import useElement from '../use-element';
+import { useToolBox } from '../use-toolbox';
 
 export interface HeadingConfig {
-    maxLines: PropType<ParagraphProps, 'maxLines'>;
+  maxLines: PropType<ParagraphProps, 'maxLines'>;
 }
 
-const HEADING_CLASSES: ElementClassValues[] = [ElementClass.Primitive];
+const PARAGRAPH_CLASSES: ElementClassValues[] = [ElementClass.Primitive];
 
 const Paragraph: PageComponent<Record<string, never>, PageElementProps> = (
   props
@@ -23,25 +30,18 @@ const Paragraph: PageComponent<Record<string, never>, PageElementProps> = (
     path
   );
 
-  const { accept: parentAccept } = useContext(ContainerContext);
-
-  const { attributes, listeners, setNodeRef } = useSortable({
+  const { toolBoxView, setNodeRef ,itemStyle } = useToolBox({
     id: uid,
-    data: {
-      classes: HEADING_CLASSES,
-      parentAccept,
-    },
+    classes: PARAGRAPH_CLASSES,
   });
 
   return (
-    <GrommetParagraph
-      {...listeners}
-      {...attributes}
-      ref={setNodeRef}
-      maxLines={config.maxLines}
-    >
-      Paragraph
-    </GrommetParagraph>
+    <Box style={{ ...itemStyle }}>
+      {toolBoxView}
+      <GrommetParagraph ref={setNodeRef} maxLines={config.maxLines}>
+        Paragraph
+      </GrommetParagraph>
+    </Box>
   );
 };
 
@@ -54,7 +54,7 @@ Paragraph.ctor = () => {
     type: ElementType.FabricElement,
     model: {},
     config: {
-        maxLines: 5,
+      maxLines: 5,
     },
     classes: [ElementClass.Primitive],
   };

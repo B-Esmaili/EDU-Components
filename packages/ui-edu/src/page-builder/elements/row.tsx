@@ -7,6 +7,7 @@ import { BladesVertical, Drag } from 'grommet-icons';
 import { DraggableBox, DragHandle } from '../components';
 import { FieldView, FormFieldType } from 'styled-hook-form';
 import { useContext } from 'react';
+import { useToolBox } from '../use-toolbox';
 
 export interface RowModel {}
 export interface RowConfig { 
@@ -19,12 +20,11 @@ const ROW_CLASSES = [ElementClass.Layout];
 const Row: PageComponent<RowModel, RowProps> = (props) => {
   const { path } = props;
   const { uid } = useElement<RowModel,RowConfig>(path);
-  const {accept : parentAccept} = useContext(ContainerContext);
 
-  const { attributes, listeners, setNodeRef } = useSortable({ id: uid, data : {
-      classes : ROW_CLASSES,
-      parentAccept 
-  }});
+  const {toolBoxView,setNodeRef} = useToolBox({
+    id : uid,
+    classes : ROW_CLASSES
+  });
 
   return (
     <DraggableBox
@@ -32,9 +32,7 @@ const Row: PageComponent<RowModel, RowProps> = (props) => {
       pad="small"
       ref={setNodeRef}
     >
-      <DragHandle width="auto">
-        <Button icon={<Drag />} {...attributes} {...listeners} />
-      </DragHandle>
+      {toolBoxView}
       <Box>{path && <Container accept={["*"]} path={path} uid={uid} />}</Box>
     </DraggableBox>
   );
