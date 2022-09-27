@@ -23,6 +23,7 @@ const Row: PageComponent<RowModel, RowProps> = (props) => {
 
   const {toolBoxView,setNodeRef} = useToolBox({
     id : uid,
+    path,
     classes : ROW_CLASSES
   });
 

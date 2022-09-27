@@ -30,6 +30,7 @@ const Heading: PageComponent<Record<string, never>, PageElementProps> = (
 
   const { toolBoxView, setNodeRef, itemStyle } = useToolBox({
     id: uid,
+    path,
     classes: HEADING_CLASSES,
   });
 
@@ -65,8 +66,7 @@ export const Editor: PageComponentEditor = (props) => {
       <FieldView
         name={`${path}.config.level`}
         label="Level"
-        type={FormFieldType.DropDown}
-        defaultValue="6"
+        type={FormFieldType.DropDown}        
         options={[
           {
             name: '1',

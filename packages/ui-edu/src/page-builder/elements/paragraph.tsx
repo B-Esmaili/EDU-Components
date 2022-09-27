@@ -32,6 +32,7 @@ const Paragraph: PageComponent<Record<string, never>, PageElementProps> = (
 
   const { toolBoxView, setNodeRef ,itemStyle } = useToolBox({
     id: uid,
+    path,
     classes: PARAGRAPH_CLASSES,
   });
 

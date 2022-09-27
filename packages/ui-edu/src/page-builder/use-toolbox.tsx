@@ -1,7 +1,13 @@
 import { useSortable } from '@dnd-kit/sortable';
-import { Box, BoxExtendedProps, Button} from 'grommet';
-import { Drag } from 'grommet-icons';
 import {
+  Box,
+  BoxExtendedProps,
+  Button,
+  ButtonExtendedProps,
+  ButtonProps,
+} from 'grommet';
+import { Configure, Drag, IconProps } from 'grommet-icons';
+import React, {
   useCallback,
   useContext,
   useEffect,
@@ -11,10 +17,12 @@ import {
 } from 'react';
 import styled from 'styled-components';
 import { ContainerContext } from './elements/fabric/container';
+import { PageBuilderContext } from './page-builder-context';
 import { ElementClassValues } from './types';
 
 export interface UseToolBoxOptions {
   id: string;
+  path: string;
   sortable?:
     | boolean
     | Omit<Parameters<typeof useSortable>[0], 'id' | 'disabled'>;
@@ -29,9 +37,9 @@ export interface UseToolBoxReturn {
 
 export interface ToolBoxItem {
   title: string;
-  icon: JSX.Element;
+  icon: React.ComponentType<any>;
   itemRef?: (element: HTMLElement | null) => void;
-  props?: Record<string, unknown>;
+  props?: ButtonExtendedProps;
 }
 
 export interface ToolBoxProps extends BoxExtendedProps {
@@ -50,6 +58,13 @@ const StyledToolBox = styled(Box)<BoxExtendedProps>`
 const ToolBox: React.FC<ToolBoxProps> = (props) => {
   const { items, itemId, ...rest } = props;
 
+  const createIcon = (icon: React.ComponentType<any>) => {
+    const iconElement = React.createElement<IconProps>(icon, {
+      size: 'small',
+    });
+    return iconElement;
+  };
+
   return (
     <StyledToolBox
       direction="row"
@@ -60,8 +75,16 @@ const ToolBox: React.FC<ToolBoxProps> = (props) => {
       pad="xsmall"
     >
       {items.map((item, i) => (
-        <ToolBoxItemView key={i}>
-          <Button size='xxsmall' plain icon={item.icon} ref={item.itemRef} {...item.props} />
+        <ToolBoxItemView key={i} margin={{
+          horizontal : "xsmall"
+        }}>
+          <Button
+            size="xxsmall"
+            plain
+            icon={createIcon(item.icon)}
+            ref={item.itemRef}
+            {...item.props}
+          />
         </ToolBoxItemView>
       ))}
     </StyledToolBox>
@@ -69,8 +92,9 @@ const ToolBox: React.FC<ToolBoxProps> = (props) => {
 };
 
 const useToolBox = (options: UseToolBoxOptions): UseToolBoxReturn => {
-  const { sortable = true, id, classes } = options;
+  const { sortable = true, path, id, classes } = options;
   const { accept: parentAccept } = useContext(ContainerContext);
+  const { setActiveElementId } = useContext(PageBuilderContext);
 
   const sortableInfo = useSortable({
     id,
@@ -81,19 +105,34 @@ const useToolBox = (options: UseToolBoxOptions): UseToolBoxReturn => {
     ...(typeof sortable === 'boolean' ? null : sortable),
   });
 
+  const handleConfigreClick = useCallback(() => {
+    setActiveElementId({
+      uid: id,
+      path,
+    });
+  },[id, path, setActiveElementId]);
+
   const toolboxItems = useMemo(() => {
-    const items: ToolBoxItem[] = [];
+    const configButton: ToolBoxItem = {
+      icon: Configure,
+      title: 'Configure',
+      props: {
+        onClick: handleConfigreClick,
+      },
+    };
+
+    const items: ToolBoxItem[] = [configButton];
 
     if (sortable) {
-      items.push({
+      items.splice(0,0,{
         itemRef: sortableInfo.setDraggableNodeRef,
         props: { ...sortableInfo.attributes, ...sortableInfo.listeners },
-        icon: <Drag size='small'/>,
+        icon: Drag,
         title: 'Drag',
       });
     }
     return items;
-  }, [sortable, sortableInfo]);
+  }, [handleConfigreClick, sortable, sortableInfo.attributes, sortableInfo.listeners, sortableInfo.setDraggableNodeRef]);
 
   const nodeRef = useRef<HTMLElement | null>(null);
 
