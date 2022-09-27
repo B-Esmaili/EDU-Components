@@ -36,7 +36,7 @@ const Heading: PageComponent<Record<string, never>, PageElementProps> = (
   return (
     <Box style={{ ...itemStyle }}>
       {toolBoxView}
-      <GrommetHeading ref={setNodeRef} level={config.level}>
+      <GrommetHeading ref={setNodeRef} level={config.level} fill>
         Heading
       </GrommetHeading>
     </Box>

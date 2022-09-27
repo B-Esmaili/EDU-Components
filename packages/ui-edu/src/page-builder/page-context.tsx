@@ -90,7 +90,7 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
       document.body.removeChild(indicatorRect);
     }
 
-    if (!id) {
+    if (!id || !e.over) {
       return;
     }
 
@@ -99,11 +99,11 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
       const targetAccepts = e.over?.data?.current?.[
         'accept'
       ] as ElementClassValues[];
-      
+
       if (!canDrop(sourceClasses, targetAccepts)) {
         return;
       }
- 
+
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const oldParentContext = useExistingElement(oldParentId);
       const srcElement = oldParentContext?.getElementById(oldId as string);
@@ -128,9 +128,34 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
         const targetAccepts = e.over?.data?.current?.[
           'parentAccept'
         ] as ElementClassValues[];
+
         if (!canDrop(sourceClasses, targetAccepts)) {
           return;
         }
+
+        const mousePosY =
+          (e.activatorEvent as Record<string, any>)['pageY'] + e.delta.y;
+        const mousePosX =
+          (e.activatorEvent as Record<string, any>)['pageX'] + e.delta.x;
+        const {
+          height: targetHeight,
+          width: targetWidth,
+          left: targetX,
+          top: targetY,
+        } = e.over.rect;
+
+        //@ts-ignore
+        const targetDomElement = e.collisions?.at(0)?.data.droppableContainer.node.current as HTMLElement;
+        const targetFraction = (targetDomElement.clientWidth * 100) / (targetDomElement.parentElement?.clientWidth ?? 0);
+
+        const targetOffsetY = mousePosY - (targetY + window.scrollY),
+          targetOffsetX = mousePosX - (targetX + window.scrollX);
+
+        const orientY = (100 * targetOffsetY) / targetHeight,
+          orientX = (100 * targetOffsetX) / targetWidth;        
+
+        const targetIndexOffset = (targetFraction > 90 ? orientY : orientX) > 50 ? 1 : 0;
+
         // eslint-disable-next-line react-hooks/rules-of-hooks
         const newParentEl = useExistingElement(newParentId);
         // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -141,8 +166,17 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
           const targetIndex = newParentEl.getElementIndexById(id as string);
 
           oldParentEl?.removeElement(srcIndex);
+
+          const computedTargetIndex = Math.max(
+            Math.min(
+              targetIndex + targetIndexOffset,
+              newParentEl.childElements.length
+            ),
+            0
+          );
+
           if (dragedElement) {
-            newParentEl?.addElement(dragedElement, targetIndex);
+            newParentEl?.addElement(dragedElement, computedTargetIndex);
           }
         }
       }
@@ -180,7 +214,7 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
   const mouseSensor = useSensor(MouseSensor);
   const touchSensor = useSensor(TouchSensor);
   const keyboardSensor = useSensor(KeyboardSensor);
-  
+
   const sensors = useSensors(mouseSensor, touchSensor, keyboardSensor);
 
   return (
@@ -209,7 +243,7 @@ const PageContext: React.FC<PageContextProps> = (props) => {
   const { children, formMethods: methods } = props;
 
   const componentsMetadata = useMemo(() => {
-     return [...builtInComponentsMeta];    
+    return [...builtInComponentsMeta];
   }, []);
 
   const contextValue: PageBuilderContextValue = {

@@ -112,7 +112,6 @@ const useToolBox = (options: UseToolBoxOptions): UseToolBoxReturn => {
 
   const handleToolBoxHover = useCallback(() => {
     if (mouseLeaveTimerHandle.current) {
-      console.log('clear time');
       clearTimeout(mouseLeaveTimerHandle.current);
     }
   }, [mouseLeaveTimerHandle]);
@@ -133,7 +132,6 @@ const useToolBox = (options: UseToolBoxOptions): UseToolBoxReturn => {
     const element = nodeRef.current;
 
     const handleMouseEnter = (e: MouseEvent) => {
-      console.log('in');
       e.stopPropagation();
       setIsOver(true);
     };
@@ -141,7 +139,6 @@ const useToolBox = (options: UseToolBoxOptions): UseToolBoxReturn => {
     const handleMouseOut = (e: MouseEvent) => {
       mouseLeaveTimerHandle.current = setTimeout(() => {
         setIsOver(false);
-        console.log('out');
       }, 500) as unknown as number;
       e.stopPropagation();
     };
