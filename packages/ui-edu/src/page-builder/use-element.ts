@@ -23,7 +23,7 @@ const useElement = function <TModel extends object = object,TConfig extends obje
   const configProp = `${elementId}.config`;
   const focusRef = useRef<number>();
 
-  const { register, getValues, setValue, control } = useFormContext();
+  const { register, getValues, setValue, control ,watch} = useFormContext();
 
   const createElementStore = (options: AddElementOptions): PageElement => {
     const { model , config, classes, type, codeName, children } = options;
@@ -144,14 +144,16 @@ const useElement = function <TModel extends object = object,TConfig extends obje
     [elementId]
   );
 
+  const VALUE = watch(`${elementId}.${childs_prefix}`);
+
   const childElements = useMemo(
     () =>
       {
-        return (fields as unknown as PageElement[]).map((f, idx: number) => {
+        return (VALUE || []).map((f :PageElement, idx: number) => {
           return getElementView(f, idx);
         }) as React.ReactElement[];
       },
-    [fields, getElementView]
+    [VALUE, getElementView]
   );
 
   const uid = useMemo(
