@@ -19,14 +19,16 @@ import { useMemo, useRef, useState } from 'react';
 import { DragOverlayView } from './components/drag-overlay-view';
 import { createGlobalStyle } from 'styled-components';
 import { UseFormReturn } from 'react-hook-form';
-import { PageBuilderContextProvider, PageBuilderContextValue, PageElementId } from './page-builder-context';
+import {
+  PageBuilderContextProvider,
+  PageBuilderContextValue,
+  PageElementId,
+} from './page-builder-context';
 import { builtInComponentsMeta } from './element-factory';
 import { ElementClassValues } from './types';
 
 const GlobalStyle = createGlobalStyle`
 ` as React.ComponentClass;
-
-const  DRAG_TRESHOLD = 40;
 
 interface DragDropContextProps {
   children: React.ReactNode;
@@ -56,25 +58,29 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
     });
   }
 
-  const canDrop = (sourceClasses  : ElementClassValues [] | null , targetAccepts : ElementClassValues[] | null) : boolean =>{
-
-    if (!targetAccepts || targetAccepts.includes("*")){
+  const canDrop = (
+    sourceClasses: ElementClassValues[] | null,
+    targetAccepts: ElementClassValues[] | null
+  ): boolean => {
+    if (!targetAccepts || targetAccepts.includes('*')) {
       return true;
     }
 
-    if (!sourceClasses){
+    if (!sourceClasses) {
       return true;
     }
 
-    return sourceClasses.some(c=>targetAccepts.includes(c));
-  }
+    return sourceClasses.some((c) => targetAccepts.includes(c));
+  };
 
   const handleDragEnd = (e: DragEndEvent) => {
     //@ts-ignore
     const oldParentId = e.active?.data?.current?.sortable?.containerId;
     //@ts-ignore
     const newParentId = e.over?.data?.current?.sortable?.containerId;
-    const sourceClasses = e.active?.data?.current?.["classes"] as ElementClassValues[];
+    const sourceClasses = e.active?.data?.current?.[
+      'classes'
+    ] as ElementClassValues[];
 
     const id = e.over?.id as string;
     const { id: oldId } = e.active;
@@ -90,9 +96,11 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
 
     //if target is a container
     if (id.startsWith('root')) {
-      const targetAccepts = e.over?.data?.current?.["accept"] as ElementClassValues[];
+      const targetAccepts = e.over?.data?.current?.[
+        'accept'
+      ] as ElementClassValues[];
       
-      if (!canDrop(sourceClasses , targetAccepts)){
+      if (!canDrop(sourceClasses, targetAccepts)) {
         return;
       }
  
@@ -117,8 +125,10 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
           parentEl.moveElement(srcIndex, targetInex);
         }
       } else {
-        const targetAccepts = e.over?.data?.current?.["parentAccept"] as ElementClassValues[];        
-        if (!canDrop(sourceClasses , targetAccepts)){
+        const targetAccepts = e.over?.data?.current?.[
+          'parentAccept'
+        ] as ElementClassValues[];
+        if (!canDrop(sourceClasses, targetAccepts)) {
           return;
         }
         // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -167,23 +177,11 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
     }
   };
 
-  const mouseSensor = useSensor(MouseSensor,{
-    activationConstraint:{
-      distance: DRAG_TRESHOLD
-    }
-  });
-  const touchSensor = useSensor(TouchSensor , {
-    activationConstraint :{
-      distance : DRAG_TRESHOLD
-    }
-  });
+  const mouseSensor = useSensor(MouseSensor);
+  const touchSensor = useSensor(TouchSensor);
   const keyboardSensor = useSensor(KeyboardSensor);
   
-  const sensors = useSensors(
-    mouseSensor,
-    touchSensor,
-    keyboardSensor,
-  );
+  const sensors = useSensors(mouseSensor, touchSensor, keyboardSensor);
 
   return (
     <DndContext
@@ -210,17 +208,17 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
 const PageContext: React.FC<PageContextProps> = (props) => {
   const { children, formMethods: methods } = props;
 
-  const componentsMetadata = useMemo(()=>{
+  const componentsMetadata = useMemo(() => {
      return [...builtInComponentsMeta];    
-  },[]);
+  }, []);
 
-  const contextValue : PageBuilderContextValue = {    
-    setActiveElementId : (id: PageElementId | null)=>{
-      methods.setValue("activeElementId" , id);
+  const contextValue: PageBuilderContextValue = {
+    setActiveElementId: (id: PageElementId | null) => {
+      methods.setValue('activeElementId', id);
     },
-    activeElementId : methods.watch("activeElementId"),
-    componentsMetadata
-  }
+    activeElementId: methods.watch('activeElementId'),
+    componentsMetadata,
+  };
 
   return (
     <PageBuilderContextProvider value={contextValue}>
