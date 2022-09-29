@@ -1,4 +1,5 @@
 import {
+  ElementCategory,
   ElementClass,
   ElementClassValues,
   ElementType,
@@ -49,13 +50,13 @@ Heading.icon = <Subscript />;
 
 Heading.ctor = () => {
   return {
-    elementClass: ElementClass.Layout,
     type: ElementType.FabricElement,
     model: {},
     config: {
       level: '3',
     },
-    classes: [ElementClass.Primitive],
+    classes: HEADING_CLASSES,
+    categories : [ElementCategory.Standard]
   };
 };
 

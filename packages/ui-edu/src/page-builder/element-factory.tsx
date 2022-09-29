@@ -7,31 +7,34 @@ import { PageComponentMeta } from './page-builder';
 import Row from './elements/row';
 import Heading from './elements/heading';
 import Paragraph from './elements/paragraph';
+import { pick } from 'remeda';
 
 const getElementKey = (codeName: string) => `./elements/${codeName}`;
+
+const x = pick(Row.ctor(), ['classes', 'categories']);
 
 const builtInComponents: PageComponentMeta[] = [
   {
     id: 'row',
     Component: Row,
-    icon : Row.icon,
-    label : Row.displayName,
-    classes : []
+    icon: Row.icon,
+    label: Row.displayName,
+    ...pick(Row.ctor(), ['classes', 'categories']),
   },
   {
     id: 'heading',
     Component: Heading,
-    icon : Heading.icon,
-    label : Heading.displayName,
-    classes : []
+    icon: Heading.icon,
+    label: Heading.displayName,
+    ...pick(Heading.ctor(), ['classes', 'categories']),
   },
   {
     id: 'paragraph',
     Component: Paragraph,
-    icon : Paragraph.icon,
-    label : Paragraph.displayName,
-    classes : []
-  }
+    icon: Paragraph.icon,
+    label: Paragraph.displayName,
+    ...pick(Paragraph.ctor(), ['classes', 'categories']),
+  },
 ];
 
 const elementCache = new Map<string, React.ComponentType>();
@@ -60,15 +63,11 @@ export const createElement = (
 };
 
 export const getElementEditorComponent = async (
-  element: PageElement,
-) : Promise<React.ComponentType> => {
+  element: PageElement
+): Promise<React.ComponentType> => {
   return new Promise((res, rej) => {
-    prepairElement(element , (c)=>c.Editor)
-      .then((c) =>
-        res(
-          c
-        )
-      )
+    prepairElement(element, (c) => c.Editor)
+      .then((c) => res(c))
       .catch((e) => rej(e));
   });
 };
@@ -93,7 +92,7 @@ export const prepairElement = (
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
       loadingComponent.render.preload().then((component: any) => {
-        if (!componentSelector){
+        if (!componentSelector) {
           elementCache.set(elementPath, component);
         }
         res(component);
@@ -124,7 +123,4 @@ const createFabricElement = (
   return element;
 };
 
-
-export {
-  builtInComponents as builtInComponentsMeta
-}
+export { builtInComponents as builtInComponentsMeta };

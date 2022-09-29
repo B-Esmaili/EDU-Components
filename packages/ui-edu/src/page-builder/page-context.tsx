@@ -26,6 +26,10 @@ import {
 } from './page-builder-context';
 import { builtInComponentsMeta } from './element-factory';
 import { ElementClassValues } from './types';
+import { PageBuilderLocalization } from './page-builder';
+import { PartialDeep } from 'type-fest';
+import { defaultLocalization } from './localization';
+import { deepMerge } from 'grommet/utils';
 
 const GlobalStyle = createGlobalStyle`
 ` as React.ComponentClass;
@@ -37,6 +41,7 @@ interface DragDropContextProps {
 export interface PageContextProps {
   children: React.ReactNode;
   formMethods: UseFormReturn<any>;
+  localization?: PartialDeep<PageBuilderLocalization>;
 }
 
 interface ElementId {
@@ -145,16 +150,20 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
         } = e.over.rect;
 
         //@ts-ignore
-        const targetDomElement = e.collisions?.at(0)?.data.droppableContainer.node.current as HTMLElement;
-        const targetFraction = (targetDomElement.clientWidth * 100) / (targetDomElement.parentElement?.clientWidth ?? 0);
+        const targetDomElement = e.collisions?.at(0)?.data.droppableContainer
+          .node.current as HTMLElement;
+        const targetFraction =
+          (targetDomElement.clientWidth * 100) /
+          (targetDomElement.parentElement?.clientWidth ?? 0);
 
         const targetOffsetY = mousePosY - (targetY + window.scrollY),
           targetOffsetX = mousePosX - (targetX + window.scrollX);
 
         const orientY = (100 * targetOffsetY) / targetHeight,
-          orientX = (100 * targetOffsetX) / targetWidth;        
+          orientX = (100 * targetOffsetX) / targetWidth;
 
-        const targetIndexOffset = (targetFraction > 90 ? orientY : orientX) > 50 ? 1 : 0;
+        const targetIndexOffset =
+          (targetFraction > 90 ? orientY : orientX) > 50 ? 1 : 0;
 
         // eslint-disable-next-line react-hooks/rules-of-hooks
         const newParentEl = useExistingElement(newParentId);
@@ -240,11 +249,19 @@ const DragDropContext: React.FC<DragDropContextProps> = (props) => {
 };
 
 const PageContext: React.FC<PageContextProps> = (props) => {
-  const { children, formMethods: methods } = props;
+  const { children, formMethods: methods, localization } = props;
 
   const componentsMetadata = useMemo(() => {
     return [...builtInComponentsMeta];
   }, []);
+
+  const compositeLocalization = useMemo(
+    () =>
+      localization
+        ? deepMerge(defaultLocalization, localization)
+        : defaultLocalization,
+    [localization]
+  );
 
   const contextValue: PageBuilderContextValue = {
     setActiveElementId: (id: PageElementId | null) => {
@@ -252,6 +269,7 @@ const PageContext: React.FC<PageContextProps> = (props) => {
     },
     activeElementId: methods.watch('activeElementId'),
     componentsMetadata,
+    localization: compositeLocalization,
   };
 
   return (

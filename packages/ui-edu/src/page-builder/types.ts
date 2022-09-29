@@ -1,3 +1,4 @@
+import { PropType } from '@atomic-web/ui-core';
 import React, { FC, ReactElement } from 'react';
 
 export enum ElementType {
@@ -6,9 +7,14 @@ export enum ElementType {
 }
 
 export enum ElementClass {
-  'Block' = 1,
-  'Primitive' = 2,
-  'Layout' = 3
+  Primitive = 'primitive',
+  Layout = 'layout',
+  Row = 'row'
+}
+
+export enum ElementCategory{
+  Layout = 'layout',
+  Standard = 'standard-element' 
 }
 
 export type ElementClassValues = ElementClass | "*";
@@ -20,6 +26,7 @@ export interface PageElement<TModel extends object = object,TConfig extends obje
   model?: TModel;
   config?: TConfig;
   classes?: ElementClassValues[];
+  categories:ElementCategory[],
   type: ElementType;
   codeName: string;
 }
@@ -68,7 +75,8 @@ export interface PageElementProps {
 }
 
 export type PageComponentConstructor<TModel extends object = object, TConfig extends object = object> = () => {
-  classes: ElementClassValues[];
+  classes: PropType<PageElement,'classes'>;
+  categories: PropType<PageElement,'categories'>;
   type: ElementType;
   model?:TModel;
   config?:TConfig;

@@ -5,6 +5,7 @@ import { TextAlignFull } from 'grommet-icons';
 import { useContext } from 'react';
 import { FieldView, FormFieldType } from 'styled-hook-form';
 import {
+  ElementCategory,
   ElementClass,
   ElementClassValues,
   ElementType,
@@ -57,7 +58,8 @@ Paragraph.ctor = () => {
     config: {
       maxLines: 5,
     },
-    classes: [ElementClass.Primitive],
+    classes: PARAGRAPH_CLASSES,
+    categories:[ElementCategory.Standard]
   };
 };
 

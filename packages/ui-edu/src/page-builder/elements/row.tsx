@@ -1,12 +1,10 @@
-import { useSortable } from '@dnd-kit/sortable';
-import { Accordion, AccordionPanel, Box, Button } from 'grommet';
-import { ElementClass, ElementType, PageComponent, PageComponentEditor, PageElementProps } from '../types';
+import { Accordion, AccordionPanel, Box } from 'grommet';
+import { ElementCategory, ElementClass, ElementType, PageComponent, PageComponentEditor, PageElementProps } from '../types';
 import useElement from '../use-element';
-import Container, { ContainerContext } from './fabric/container';
-import { BladesVertical, Drag } from 'grommet-icons';
-import { DraggableBox, DragHandle } from '../components';
+import Container from './fabric/container';
+import { BladesVertical } from 'grommet-icons';
+import { DraggableBox } from '../components';
 import { FieldView, FormFieldType } from 'styled-hook-form';
-import { useContext } from 'react';
 import { useToolBox } from '../use-toolbox';
 
 export interface RowModel {}
@@ -15,7 +13,7 @@ export interface RowConfig {
 }
 export interface RowProps extends PageElementProps {}
 
-const ROW_CLASSES = [ElementClass.Layout];
+const ROW_CLASSES = [ElementClass.Layout, ElementClass.Row];
 
 const Row: PageComponent<RowModel, RowProps> = (props) => {
   const { path } = props;
@@ -47,7 +45,8 @@ Row.ctor = ()=>{
     elementClass : ElementClass.Layout,
     type : ElementType.FabricElement,
     model : {},
-    classes : [ElementClass.Layout]
+    classes : ROW_CLASSES,
+    categories : [ElementCategory.Layout]
   }
 }
 
