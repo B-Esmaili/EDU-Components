@@ -11,29 +11,21 @@ import { pick } from 'remeda';
 
 const getElementKey = (codeName: string) => `./elements/${codeName}`;
 
-const x = pick(Row.ctor(), ['classes', 'categories']);
-
 const builtInComponents: PageComponentMeta[] = [
   {
     id: 'row',
-    Component: Row,
-    icon: Row.icon,
-    label: Row.displayName,
-    ...pick(Row.ctor(), ['classes', 'categories']),
+    Component: Row,    
+    ...pick(Row.ctor(), ['classes', 'categories' , 'label', 'icon']),
   },
   {
     id: 'heading',
     Component: Heading,
-    icon: Heading.icon,
-    label: Heading.displayName,
-    ...pick(Heading.ctor(), ['classes', 'categories']),
+    ...pick(Heading.ctor(), ['classes', 'categories' , 'label', 'icon']),
   },
   {
     id: 'paragraph',
     Component: Paragraph,
-    icon: Paragraph.icon,
-    label: Paragraph.displayName,
-    ...pick(Paragraph.ctor(), ['classes', 'categories']),
+    ...pick(Paragraph.ctor(), ['classes', 'categories' , 'label', 'icon']),
   },
 ];
 

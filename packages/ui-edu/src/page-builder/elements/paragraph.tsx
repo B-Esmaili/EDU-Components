@@ -47,9 +47,6 @@ const Paragraph: PageComponent<Record<string, never>, PageElementProps> = (
   );
 };
 
-Paragraph.displayName = 'Paragraph';
-Paragraph.icon = <TextAlignFull />;
-
 Paragraph.ctor = () => {
   return {
     elementClass: ElementClass.Layout,
@@ -59,7 +56,9 @@ Paragraph.ctor = () => {
       maxLines: 5,
     },
     classes: PARAGRAPH_CLASSES,
-    categories:[ElementCategory.Standard]
+    categories:[ElementCategory.Standard],
+    icon:TextAlignFull ,
+    label:"Paragraph"
   };
 };
 

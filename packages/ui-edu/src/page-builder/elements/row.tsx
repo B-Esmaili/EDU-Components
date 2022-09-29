@@ -37,8 +37,6 @@ const Row: PageComponent<RowModel, RowProps> = (props) => {
   );
 };
 
-Row.displayName = "Row";
-
 Row.ctor = ()=>{
 
   return {
@@ -46,11 +44,11 @@ Row.ctor = ()=>{
     type : ElementType.FabricElement,
     model : {},
     classes : ROW_CLASSES,
-    categories : [ElementCategory.Layout]
+    categories : [ElementCategory.Layout],
+    icon : BladesVertical,
+    label : "Row"
   }
 }
-
-Row.icon = <BladesVertical/>
 
 export const Editor: PageComponentEditor = (props) => {
   const { path } = props;

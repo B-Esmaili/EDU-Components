@@ -11,7 +11,7 @@ import { PropType } from '@atomic-web/ui-core';
 export interface PageComponentMeta {
   id: string;
   Component: PageComponent;
-  icon: React.ReactNode;
+  icon:JSX.Element | React.ComponentType;
   label: string;
   classes: PropType<PageElement,'classes'>;
   categories : PropType<PageElement,'categories'> ;
@@ -20,12 +20,20 @@ export interface PageComponentMeta {
 export type ElementCategoryLocalization = {
   [key in ElementCategory]: {
     title : string,
-    icon : JSX.Element | React.ReactNode
+    icon : JSX.Element | React.ComponentType
   };
+}
+
+export type ElementMetaDataLocalization ={
+  [key in string] : {
+    label: string,
+    icon : JSX.Element | React.ComponentType
+  }
 }
 
 export interface PageBuilderLocalization {
   elementCategories: ElementCategoryLocalization;
+  elementMetadata?: ElementMetaDataLocalization;
 }
 
 export interface PageBuilderProps {

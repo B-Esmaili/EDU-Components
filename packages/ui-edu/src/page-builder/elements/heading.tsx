@@ -45,9 +45,6 @@ const Heading: PageComponent<Record<string, never>, PageElementProps> = (
   );
 };
 
-Heading.displayName = 'Heading';
-Heading.icon = <Subscript />;
-
 Heading.ctor = () => {
   return {
     type: ElementType.FabricElement,
@@ -56,7 +53,9 @@ Heading.ctor = () => {
       level: '3',
     },
     classes: HEADING_CLASSES,
-    categories : [ElementCategory.Standard]
+    categories : [ElementCategory.Standard],
+    icon:Subscript,
+    label : "Heading"
   };
 };
 

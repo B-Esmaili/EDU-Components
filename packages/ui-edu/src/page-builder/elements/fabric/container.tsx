@@ -5,7 +5,7 @@ import {
 } from '@dnd-kit/sortable';
 import { Box, Button, Grid, Layer, Text } from 'grommet';
 import { Add } from 'grommet-icons';
-import {
+import React, {
   createContext,
   useCallback,
   useContext,
@@ -93,12 +93,13 @@ const Container: React.FC<ContainerProps> = (props) => {
             <Button plain icon={<Add size="medium" />} onClick={handleAdd} />
           </Box>
         </Box>
-        <ComponentSelectionPanel
-          accept={accept}
-          show={showComponentSelection}
-          onClose={handleCloseComponentSelection}
-          onSelect={handleComponentSelect}
-        />
+        {showComponentSelection && (
+          <ComponentSelectionPanel
+            accept={accept}
+            onClose={handleCloseComponentSelection}
+            onSelect={handleComponentSelect}
+          />
+        )}
         {/* <DropPlaceholder onClick={handleAdd} id={uid}/> */}
       </SortableContext>
     </Box>
@@ -106,16 +107,28 @@ const Container: React.FC<ContainerProps> = (props) => {
 };
 
 export interface ComponentSelectionPabelProps {
-  show: boolean;
   accept: ElementClassValues[];
   onClose?: () => void;
   onSelect?: (met: PageComponentMeta) => void;
 }
 
+const getElementIcon = (
+  icon: JSX.Element | React.ComponentType,
+  size = 'medium'
+) => {
+  if (React.isValidElement(icon)) {
+    return icon;
+  }
+
+  return React.createElement(icon as React.ComponentType<{ size: string }>, {
+    size,
+  });
+};
+
 const ComponentSelectionPanel: React.FC<ComponentSelectionPabelProps> = (
   props
 ) => {
-  const { onClose, show, onSelect, accept } = props;
+  const { onClose, onSelect, accept } = props;
   const { componentsMetadata, localization } = useContext(PageBuilderContext);
 
   const elementCategoriesHavingItems = useMemo(
@@ -124,12 +137,11 @@ const ComponentSelectionPanel: React.FC<ComponentSelectionPabelProps> = (
         ? localization.elementCategories
         : Object.keys(localization.elementCategories)
             .filter((k) =>
-              componentsMetadata
-                .some(
-                  (m) =>
-                    m.categories.includes(k as ElementCategory) &&
-                    accept.some((a) => m.classes?.includes(a))
-                )
+              componentsMetadata.some(
+                (m) =>
+                  m.categories.includes(k as ElementCategory) &&
+                  accept.some((a) => m.classes?.includes(a))
+              )
             )
             .reduce((p, c) => {
               p[c] = (localization.elementCategories as Record<string, any>)[c];
@@ -156,16 +168,22 @@ const ComponentSelectionPanel: React.FC<ComponentSelectionPabelProps> = (
 
   const categoryMetadata = useMemo(
     () =>
-      componentsMetadata.filter(
-        (m) =>
-          (accept.includes('*') ||
-            m.classes?.some((c) => accept.includes(c))) &&
-          m.categories.includes(activeCat as ElementCategory)
-      ),
-    [accept, activeCat, componentsMetadata]
+      componentsMetadata
+        .filter(
+          (m) =>
+            (accept.includes('*') ||
+              m.classes?.some((c) => accept.includes(c))) &&
+            m.categories.includes(activeCat as ElementCategory)
+        )
+        .map((m) => ({
+          ...m,
+          icon: localization?.elementMetadata?.[m.id]?.icon ?? m.icon,
+          label: localization?.elementMetadata?.[m.id]?.label ?? m.label,
+        })),
+    [accept, activeCat, componentsMetadata, localization.elementMetadata]
   );
 
-  return show ? (
+  return (
     <Layer onClickOutside={onClose}>
       <Grid
         width="large"
@@ -218,29 +236,31 @@ const ComponentSelectionPanel: React.FC<ComponentSelectionPabelProps> = (
             gap="small"
           >
             {categoryMetadata.length > 0 &&
-              categoryMetadata.map((meta) => (
-                <Box
-                  key={meta.id}
-                  align="center"
-                  pad="medium"
-                  onClick={handleSelect(meta)}
-                  hoverIndicator="background-back"
-                  border={{
-                    size: '2px',
-                    color: 'brand',
-                    style: 'solid',
-                  }}
-                  round="xsmall"
-                >
-                  <Box>{meta.icon}</Box>
-                  <Box>{meta.label}</Box>
-                </Box>
-              ))}
+              categoryMetadata.map((meta) => {
+                return (
+                  <Box
+                    key={meta.id}
+                    align="center"
+                    pad="medium"
+                    onClick={handleSelect(meta)}
+                    hoverIndicator="background-back"
+                    border={{
+                      size: '2px',
+                      color: 'brand',
+                      style: 'solid',
+                    }}
+                    round="xsmall"
+                  >
+                    <Box>{getElementIcon(meta.icon)}</Box>
+                    <Box>{meta.label}</Box>
+                  </Box>
+                );
+              })}
           </Grid>
         </Box>
       </Grid>
     </Layer>
-  ) : null;
+  );
 };
 
 export default Container;

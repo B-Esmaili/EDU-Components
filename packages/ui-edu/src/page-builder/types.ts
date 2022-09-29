@@ -80,6 +80,8 @@ export type PageComponentConstructor<TModel extends object = object, TConfig ext
   type: ElementType;
   model?:TModel;
   config?:TConfig;
+  label: string;
+  icon: JSX.Element | React.ComponentType;
 };
 
 export type PageComponent<
@@ -87,8 +89,6 @@ export type PageComponent<
   TProps extends PageElementProps = PageElementProps
 > = FC<TProps> & {
   ctor: PageComponentConstructor<TModel>;
-  displayName: string;
-  icon: React.ReactNode;
 };
 
 export type PageComponentEditor<
